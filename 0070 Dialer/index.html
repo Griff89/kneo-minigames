@@ -15,539 +15,546 @@
 				// onCreate to be executed once the game is firstly created
 				// onUpdate to be called every time the game us updated
 				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '');
-				game.onScore = new Phaser.Signal();
-				game.on = function(event, listener) {
-					event = event.charAt(0).toUpperCase() + event.slice(1);
-					if(game.hasOwnProperty('on' + event)) {
-						console.log('has property');
-						game['on' + event].add(listener);
-					} else {
-						console.log('do not have- on' + event)
-					}
-				};
-				
-				window.game = game;
 
-				function preload() {
-					game.load.image('LOADER_BG', 'assets/kneo_assets/loaderBg.png');
-					game.load.image('LOADER_BAR', 'assets/kneo_assets/loader.png');
+                    this.bootScreen = function() {
+                        function preload() {
+                            game.load.image('LOADER_BG', 'assets/kneo_assets/loaderBg.png');
+                            game.load.image('LOADER_BAR', 'assets/kneo_assets/loader.png');
+                        }
+                        function create() {
+                            game.state.start('loadScreen');
+                        }
 
-                    game.add.sprite(0, 0, 'LOADER_BG');
+                        return {
+                            preload: preload,
+                            create: create
+                        }
+                    };
 
-					game.load.image('PIC_BGD', 'assets/kneo_assets/bg.png');
+                    this.loadScreen = function() {
+                        function preload() {
+                            game.load.image('PIC_BGD', 'assets/kneo_assets/bg.png');
 
-					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
-					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
-					
-					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
-					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
-					
-					
-					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);
-					
-					game.load.spritesheet('PIC_COMMAND_TEXT', 'assets/kneo_assets/text.png', 318, 32);					
-					
-					game.load.spritesheet('PIC_DIALBTN_INNER', 'assets/kneo_assets/small_button.png', 84, 84);
-					
-					game.load.spritesheet('PIC_DIALBTN_TEXTS', 'assets/kneo_assets/little_numbers.png', 83, 83);
-					
-					
-					game.load.spritesheet('PIC_GUESSED_NUM', 'assets/kneo_assets/big_numbers.png', 173, 173);
-					game.load.spritesheet('PIC_GUESS_RES', 'assets/kneo_assets/guess_results.png', 77, 76);
-					
-					game.load.spritesheet('PIC_GUESS_RES', 'assets/kneo_assets/guess_result_symbol.png', 42, 45);
-					
-					game.load.spritesheet('PIC_DIG_FONT', 'assets/kneo_assets/little_numbers3.png', 61, 47);
-					
-					
+                            game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
+                            game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+
+                            game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+                            game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');
 
 
-					
-					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
-					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');
-					
-					
-					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');
-				   
-				}
+                            game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);
 
-				
-			//	var player;
-				var mainCloseBtn=null;
-				
-				var scrScrn = null;
-				
-			
-				var num2Guess=0;
-				var roundNum=0;
-				var errorsNum=0;
-				var thisRoundHits=0;
-				
-				var maxRounds = 18;
-				var digitsByRounds = [2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10];
-				var currentDigScr = 0;
-				
-				var totScr=0;
-				
-				var guessedNums=[];
-				var dials=[];
-				var commandText;
-				
-				var showNumbersTimer;
-				var showNumbersTimerRepeatCount=0;
-				var showNumbersTimerDelay=100;
-				var delayTimer;
-				var delayTimerRepeatCount=0;
-				var delayTimerDelay=100;
-				
-				var currentShownNumber=0;
-				var gamePhase=0;//0 - before, 1 - showing, 2 - hiding, 3 - guessing			
-			
-				var preStartPage;
-				
-				//var fpsInformer;
-				var fx;
-				
-				
-				
-				var informers=[];
-				// THE GAME HAS BEEN CREATED
-				function create() {
+                            game.load.spritesheet('PIC_COMMAND_TEXT', 'assets/kneo_assets/text.png', 318, 32);
 
-					//Sounds init
-					{
-					fx = game.add.audio('sfx');
-					fx.override = true;//??? зачем это?
-					fx.addMarker('SND_QUESTION1', 0, 0.39);
-					fx.addMarker('SND_QUESTION2', 0.42, 0.39);
-					fx.addMarker('SND_QUESTION3', 0.85, 0.39);
-					fx.addMarker('SND_QUESTION4', 1.272, 0.349);
-					fx.addMarker('SND_POP1', 1.666, 0.079);
-					fx.addMarker('SND_POP2', 1.798, 0.075);
-					fx.addMarker('SND_POP3', 1.886, 0.046);
-					fx.addMarker('SND_LEVEL_START1', 1.931, 3.469);
-					fx.addMarker('SND_LEVEL_FINISHED1', 5.4, 4.582);
-					fx.addMarker('SND_ERROR1', 9.982, 0.836);
-					fx.addMarker('SND_ERROR2', 10.819, 1.033);
-					fx.addMarker('SND_ERROR3', 11.852, 0.738);
-					fx.addMarker('SND_DIAL_NUM_00', 12.590, 0.287);
-					fx.addMarker('SND_DIAL_NUM_01', 12.877, 0.287);
-					fx.addMarker('SND_DIAL_NUM_02', 13.184, 0.294);
-					fx.addMarker('SND_DIAL_NUM_03', 13.478, 0.287);
-					fx.addMarker('SND_DIAL_NUM_04', 13.766, 0.287);
-					fx.addMarker('SND_DIAL_NUM_05', 14.054, 0.287);
-					fx.addMarker('SND_DIAL_NUM_06', 14.340, 0.287);
-					fx.addMarker('SND_DIAL_NUM_07', 14.627, 0.313);
-					fx.addMarker('SND_DIAL_NUM_08', 14.941, 0.287);
-					fx.addMarker('SND_DIAL_NUM_09', 15.228, 0.287);
-					fx.addMarker('SND_BTN_DOWN1', 15.516, 0.102);
-					fx.addMarker('SND_BTN_DOWN2', 15.668, 0.096);
-					fx.addMarker('SND_BTN_DOWN3', 15.814, 0.134);
-					}
-					
+                            game.load.spritesheet('PIC_DIALBTN_INNER', 'assets/kneo_assets/small_button.png', 84, 84);
 
-					
-					game.add.sprite(0, 0, 'PIC_BGD');
-					
-				//	//lvlCap = game.add.text(320, 40, 'Dialing',{fill:"#482f11", font:"36px Arial", align: "center"});
-				//		
-					
-					commandText=game.add.sprite(500,60,'PIC_COMMAND_TEXT');
-					commandText.anchor.setTo(0.5, 0.5);
-					
-					for (var i = 1; i <= 10; i++) {
-						var ax=0;
-						var ay=0;
-						if (i < 10) {
-							ax = 295 + ((i - 1) % 3) * 85;
-							ay = 427 - Math.floor((i - 1) / 3) * 85;
-						}
-						else {
-							ax = 295-85;
-							ay = 427;
-						}
-						ax+=163;
-						ay+=231;
-						makeDialButton(i,ax,ay);
-					}
-				
-					for (i = 0; i < 10; i++) {
-						var gn = new GuessedNumber(game);
-						gn.init(i);
-						guessedNums.push(gn);
-					}
-					
-		
-					
-					
-					var inf=new Infr(game);
-					inf.init(111, 525+48);
-					informers.push(inf);
-					
-					var inf=new Infr(game);
-					inf.init(600, 1000);
-					informers.push(inf);
-					inf.visible = false;
-					
-					
-					var inf=new Infr(game);
-					inf.init(820, 525+48);
-					informers.push(inf);
-					
-	
-					
-					
-					preStartPage=game.add.group();{		
-				//	console.log(game.add);
-				//	console.log(preStartPage);
-					var bmd = game.add.bitmapData(1000,750);
-					bmd.ctx.beginPath();
-					bmd.ctx.rect(0,0,1000,750);
-					bmd.ctx.fillStyle = '#ffffff';
-					bmd.ctx.fill();					
-					preStartPage.bgdTrans = game.add.sprite(0, 0, bmd, null,preStartPage);
-					preStartPage.bgdTrans.alpha=0.75;
-					preStartPage.bgdTrans.inputEnabled = true;
-					//	nt.body.input.start(0, true);
-				//	
-					preStartPage.prePanel = game.add.sprite(50,100,'PIC_PRESTART_PANEL', null,preStartPage);
-					preStartPage.prePanel.scale.set(0.68,0.68);
-					
-					preStartPage.boy = game.add.sprite(1026,141,'PIC_GAME_DESIGNER',null, preStartPage);
-					
-					preStartPage.button = game.add.button(375, 356, 'PIC_BIG_BTN_BASE', startClick, this, 0, 1, 2, null,preStartPage);
-					preStartPage.button.anchor.setTo(0.5, 0.5);
-				
-					preStartPage.btnCap = game.add.sprite(375,356,'PIC_BTN_CAPTION', null, preStartPage);
-					preStartPage.btnCap.anchor.setTo(0.5, 0.5);
-					
-					preStartPage.explCap = game.add.text(375, 218,"Memorize numbers before\n they're hidden and then dial\n them to receive memory points. ",
-										{fill:"#991e01", font:"40px Arial", align: "center", wordWrap: true, wordWrapWidth: 570},preStartPage);
-					preStartPage.explCap.anchor.setTo(0.5, 0.5);
-					
-					//#991e01 - цвет заголовка, Voces Regular, 45
-					}
-					
-					showNumbersTimer=game.time.create(false);
-					delayTimer=game.time.create(false);
-					
-					//fpsInformer = game.add.text(50,50,'FPS');
-					this.game.time.advancedTiming = true;
+                            game.load.spritesheet('PIC_DIALBTN_TEXTS', 'assets/kneo_assets/little_numbers.png', 83, 83);
 
-					//console.log('after reset');
-					scrScrn = new ScoreScreen(game, resetMinigame);
-					scrScrn.init();
-					
-					Init();
-					
-				//	mainCloseBtn=game.add.button(931, 69, 'PIC_CLOSE_BTN', closeClick, this, 1, 0, 2);
-				//	mainCloseBtn.anchor.setTo(0.5, 0.5);
-				//	mainCloseBtn.scale.set(1.5, 1.5);
-				}
-					
-				function resetMinigame() {
-					//console.log('resetMinigame');
-					scrScrn.hide();
-					Init();
-				}
-				
-				function Init() {
-					//console.log('Init');
-					errorsNum = 0;
-					roundNum = 0;
-					thisRoundHits = 0;
-					currentDigScr = 1;
-					totScr=0;
-					
-					informers[0].reset('memory',false,200, 70,96,true);					
-					informers[1].reset('round',true,10, 70);
-					informers[2].reset('errors',false,30, 70,96,false);
-					
-					showPreStartPage();
-					
-				//	showNumbersTimer.stop();
-				//	delayTimer.stop();
-					for (var i=0; i<guessedNums.length; i++){
-						guessedNums[i].content.visible = false;
-						
-					}
-					playSound('SND_LEVEL_START1');
-					
-					setGamePhase(0);
-				}	
-				
-				function showPreStartPage(){
-					preStartPage.boy.x = 1026;
-					preStartPage.visible = true;
-					game.add.tween(preStartPage.boy).to({x:566},1000, Phaser.Easing.Linear.None, true, 0, 0,false);
-					
-				}
-				
-				function setGamePhase(ph) {	
-					gamePhase=ph;
-					switch (ph){
-						case 0:{
-							commandText.frame = 0;
-							break;
-						}
-						case 1:{
-							commandText.frame = 0;
-							roundNum++;
-							initNumbers4CurrentRound();
-							setScrore(1,roundNum);
-							//dispatchEvent(new ScoreEvent(ScoreEvent.OTHER_INF, roundNum, 0));
-							startShowingNumbers();
-							thisRoundHits = 0;						
-							break;
-						}
-						case 2:{
-							startHidingNumbers();
-							break;
-						}
-						case 3:{
-							playSound('SND_QUESTION',4);
-							commandText.frame = 1;
-							currentShownNumber = 0;						
-							break;
-						}
-					}
-				}
-				
-				function initNumbers4CurrentRound() 
-				{
-					num2Guess = digitsByRounds[roundNum-1];
-					var scl = 0.64;
-					if (num2Guess <= 4) {
-						scl = 1.0;
-					}
-					if (num2Guess >= 8) {
-						scl = 0.45;
-					}
-					
-					for (var i=0; i<guessedNums.length; i++){
-						guessedNums[i].visible = false;
-						guessedNums[i].clear();
-						
-					}
 
-					for (i = 0; i < num2Guess; i++) {
-						gn = guessedNums[i];
-						gn.setScale(scl);
-						gn.setCoordsInLine(i, num2Guess);
-						gn.content.visible=true;
-					}
-				}	
-				
-				function startShowingNumbers() 
-				{
-					showNumbersTimerRepeatCount = num2Guess + 3;
-					
-				
-					currentShownNumber = 0;
-					showNumbersTimerDelay=300;
-					showNumbersTimer.add(showNumbersTimerDelay,onShownNumberTimer, this);
-					showNumbersTimer.start();
-				//	showNumbersTimer.reset();
-				//	showNumbersTimer.start();
-				}				
-				
-				function onShownNumberTimer(){
-									
-					if (currentShownNumber < num2Guess) {
-						var gn = guessedNums[currentShownNumber];
-						if (gamePhase == 1) {
-							gn.showNewRandomNumber();
-							playSound('SND_DIAL_NUM_0'+gn.num);
-						}
-						else {
-							if (gamePhase == 2) {
-								gn.showQuestionMark();
-								playSound('SND_POP',3);
-							}
-						}
-					}
-					
-					currentShownNumber++;					
-					
-					if (currentShownNumber>=showNumbersTimerRepeatCount){
-						//COMPLETE
-						if (gamePhase == 1) {
-							setGamePhase(2);
-						}
-						else {
-							if (gamePhase == 2) {
-								setGamePhase(3);
-							}				
-						}						
-					}
-					else{//1 more iteration
-						showNumbersTimer.add(showNumbersTimerDelay,onShownNumberTimer, this);
-					}
-				}
-				
-				function startHidingNumbers() 
-				{
-					showNumbersTimerRepeatCount = num2Guess;
-					showNumbersTimerDelay = 450;
-					currentShownNumber = 0;
-					showNumbersTimer.add(showNumbersTimerDelay,onShownNumberTimer, this);
-					showNumbersTimer.start();
-				//	showNumbersTimer.reset();
-				//	showNumbersTimer.start();
-				}
-				
-				// THE GAME IS GOING TO BE UPDATED
-				function update() {	
-					
-					
-	    		}
-					
-				function render() {
-					//fpsInformer.setText("FPS: " + this.game.time.fps);
-	    		}
-					
-				function makeDialButton(tg, x, y) {
-					var button = game.add.button(x, y, 'PIC_DIALBTN_INNER', dialClick, this, 0, 2, 1);
-					button.tag = tg%10;
-					button.anchor.setTo(0.5, 0.5);
-					button.input.useHandCursor = true;
-				
-					button.smoothed = true;
-					button.btnNumText = game.add.sprite(x-2, y-3, 'PIC_DIALBTN_TEXTS', 9-tg%10);
-					button.btnNumText.anchor.setTo(0.5, 0.5);
+                            game.load.spritesheet('PIC_GUESSED_NUM', 'assets/kneo_assets/big_numbers.png', 173, 173);
+                            game.load.spritesheet('PIC_GUESS_RES', 'assets/kneo_assets/guess_results.png', 77, 76);
 
-				}
-				
-				function startClick(button) {
-					//console.log('startClick');
-					//console.log(preStartPage);
-					//console.log(preStartPage.visible);
-					
-					preStartPage.visible=false;
+                            game.load.spritesheet('PIC_GUESS_RES', 'assets/kneo_assets/guess_result_symbol.png', 42, 45);
 
-					
-					playSound('SND_BTN_DOWN',3);
-					setGamePhase(1);				
-				}				
-				
-				function closeClick(button) {
-					//console.log('closeClick');
-			
-				}
-				
-				
-				function dialClick(button) {
-					if (gamePhase == 3) {
-						var gn = guessedNums[currentShownNumber];
-					//	
-						
-						//угадали или нет
-						var b = gn.showDialResult(button.tag);
-					
-						if (b) {
-							thisRoundHits++;
-							playSound('SND_DIAL_NUM_0'+button.tag);
-							var scr = currentDigScr;//Math.ceil(thisRoundHits*thisRoundHits*thisRoundHits/15);
-							totScr+=scr;
-							setScrore(0,scr,true);	
-						//	currentDigScr++; после каждой цифры увеличивать не будем
-							
-						}
-						else {
-							errorsNum++;
-							playSound('SND_ERROR',3);
-							setScrore(2,errorsNum);
-							//dispatchEvent(new ScoreEvent(ScoreEvent.OTHER_INF, errorsNum, 1));
-							currentDigScr = 1;
-						}
-						
-						currentShownNumber++;
-						//дошли ли до конца строки
-						if (currentShownNumber == num2Guess) {
-							if (thisRoundHits==num2Guess){
-								currentDigScr++;//увеличиваем после успешного раунда
-							}
+                            game.load.spritesheet('PIC_DIG_FONT', 'assets/kneo_assets/little_numbers3.png', 61, 47);
 
-						//	dispatchEvent(new ScoreEvent(ScoreEvent.SCORE_ADD, scr, ScoreEvent.SCORE_MEM));
-						//	
-						
-						//конец ли игре
-							if (roundNum == maxRounds) {
-								
-						//		dispatchEvent(new ScoreEvent(ScoreEvent.GAME_END));
-							//	
-							//	console.log(endEvent);
-							//	console.log('eventDispatched');
-								game.onScore.dispatch(totScr);
-								
-							//	var endEvent = new Event('onGameEnd');
-							//	endEvent.score = totScr;
-							//	dispatchEvent(endEvent);								
-								
-								scrScrn.show(totScr);
-								playSound('SND_LEVEL_FINISHED1');
-								setGamePhase(4);
-							}
-							else {
-								setGamePhase(4);
-								delayTimer.add(400,onDelayTimer,this);
-								delayTimer.start();
-							}
-						}
-					}
-					
-					
-				}
-				
-				function playSound(pref,vars) {
-				//	console.log('playSound '+pref);
-				//	console.log(vars);
 
-					if (vars){
-						var r=1;
-						if (vars>1){
-							r = Math.floor(Math.random()*vars)+1;
-						}	
-						fx.play(pref+r);
-					}
-					else{
-						fx.play(pref)
-					}					
-				}
-				
-				function onDelayTimer()
-				{
-					setGamePhase(1);
-				}	
-				
-				function setScrore(infId, scr, add)
-				{
-					switch (infId){
-					case 0:{//memory
-						break;}
-					
-					case 1:{//round
-						break;}
-					
-					case 2:{//errors
-						break;}
-					
-					}
-					//console.log('setScrore '+scr+' '+infId+' '+add);
-				//	game.onScore.dispatch(add);
-					if (add){
-						informers[infId].addScore(scr);
-					}
-					else{
-						informers[infId].showScore(scr);
-					}
-				}
-				
-				
-				game.on('score', function() {
-					console.log('@@@@@@@@@@@@@@@@on score', arguments);
-				});
-				
+                            game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224, 189);
+                            game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');
+
+
+                            game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');
+
+                            // LOADER
+                            game.add.sprite(0, 0, 'LOADER_BG');
+                            game.load.setPreloadSprite(game.add.sprite(331, 380, 'LOADER_BAR'));
+
+                        }
+                        function create() {
+                            game.state.start('gameScreen');
+                        }
+
+                        return {
+                            preload: preload,
+                            create: create
+                        }
+                    };
+
+                    this.gameScreen = function() {
+
+                        //	var player;
+                        var mainCloseBtn = null;
+
+                        var scrScrn = null;
+
+
+                        var num2Guess = 0;
+                        var roundNum = 0;
+                        var errorsNum = 0;
+                        var thisRoundHits = 0;
+
+                        var maxRounds = 18;
+                        var digitsByRounds = [2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10];
+                        var currentDigScr = 0;
+
+                        var totScr = 0;
+
+                        var guessedNums = [];
+                        var dials = [];
+                        var commandText;
+
+                        var showNumbersTimer;
+                        var showNumbersTimerRepeatCount = 0;
+                        var showNumbersTimerDelay = 100;
+                        var delayTimer;
+                        var delayTimerRepeatCount = 0;
+                        var delayTimerDelay = 100;
+
+                        var currentShownNumber = 0;
+                        var gamePhase = 0;//0 - before, 1 - showing, 2 - hiding, 3 - guessing
+
+                        var preStartPage;
+
+                        //var fpsInformer;
+                        var fx;
+
+
+                        var informers = [];
+                        // THE GAME HAS BEEN CREATED
+                        function create() {
+
+                            //Sounds init
+                            {
+                                fx = game.add.audio('sfx');
+                                fx.override = true;//??? зачем это?
+                                fx.addMarker('SND_QUESTION1', 0, 0.39);
+                                fx.addMarker('SND_QUESTION2', 0.42, 0.39);
+                                fx.addMarker('SND_QUESTION3', 0.85, 0.39);
+                                fx.addMarker('SND_QUESTION4', 1.272, 0.349);
+                                fx.addMarker('SND_POP1', 1.666, 0.079);
+                                fx.addMarker('SND_POP2', 1.798, 0.075);
+                                fx.addMarker('SND_POP3', 1.886, 0.046);
+                                fx.addMarker('SND_LEVEL_START1', 1.931, 3.469);
+                                fx.addMarker('SND_LEVEL_FINISHED1', 5.4, 4.582);
+                                fx.addMarker('SND_ERROR1', 9.982, 0.836);
+                                fx.addMarker('SND_ERROR2', 10.819, 1.033);
+                                fx.addMarker('SND_ERROR3', 11.852, 0.738);
+                                fx.addMarker('SND_DIAL_NUM_00', 12.590, 0.287);
+                                fx.addMarker('SND_DIAL_NUM_01', 12.877, 0.287);
+                                fx.addMarker('SND_DIAL_NUM_02', 13.184, 0.294);
+                                fx.addMarker('SND_DIAL_NUM_03', 13.478, 0.287);
+                                fx.addMarker('SND_DIAL_NUM_04', 13.766, 0.287);
+                                fx.addMarker('SND_DIAL_NUM_05', 14.054, 0.287);
+                                fx.addMarker('SND_DIAL_NUM_06', 14.340, 0.287);
+                                fx.addMarker('SND_DIAL_NUM_07', 14.627, 0.313);
+                                fx.addMarker('SND_DIAL_NUM_08', 14.941, 0.287);
+                                fx.addMarker('SND_DIAL_NUM_09', 15.228, 0.287);
+                                fx.addMarker('SND_BTN_DOWN1', 15.516, 0.102);
+                                fx.addMarker('SND_BTN_DOWN2', 15.668, 0.096);
+                                fx.addMarker('SND_BTN_DOWN3', 15.814, 0.134);
+                            }
+
+
+                            game.add.sprite(0, 0, 'PIC_BGD');
+
+                            //	//lvlCap = game.add.text(320, 40, 'Dialing',{fill:"#482f11", font:"36px Arial", align: "center"});
+                            //
+
+                            commandText = game.add.sprite(500, 60, 'PIC_COMMAND_TEXT');
+                            commandText.anchor.setTo(0.5, 0.5);
+
+                            for (var i = 1; i <= 10; i++) {
+                                var ax = 0;
+                                var ay = 0;
+                                if (i < 10) {
+                                    ax = 295 + ((i - 1) % 3) * 85;
+                                    ay = 427 - Math.floor((i - 1) / 3) * 85;
+                                }
+                                else {
+                                    ax = 295 - 85;
+                                    ay = 427;
+                                }
+                                ax += 163;
+                                ay += 231;
+                                makeDialButton(i, ax, ay);
+                            }
+
+                            for (i = 0; i < 10; i++) {
+                                var gn = new GuessedNumber(game);
+                                gn.init(i);
+                                guessedNums.push(gn);
+                            }
+
+
+                            var inf = new Infr(game);
+                            inf.init(111, 525 + 48);
+                            informers.push(inf);
+
+                            var inf = new Infr(game);
+                            inf.init(600, 1000);
+                            informers.push(inf);
+                            inf.visible = false;
+
+
+                            var inf = new Infr(game);
+                            inf.init(820, 525 + 48);
+                            informers.push(inf);
+
+
+                            preStartPage = game.add.group();
+                            {
+                                //	console.log(game.add);
+                                //	console.log(preStartPage);
+                                var bmd = game.add.bitmapData(1000, 750);
+                                bmd.ctx.beginPath();
+                                bmd.ctx.rect(0, 0, 1000, 750);
+                                bmd.ctx.fillStyle = '#ffffff';
+                                bmd.ctx.fill();
+                                preStartPage.bgdTrans = game.add.sprite(0, 0, bmd, null, preStartPage);
+                                preStartPage.bgdTrans.alpha = 0.75;
+                                preStartPage.bgdTrans.inputEnabled = true;
+                                //	nt.body.input.start(0, true);
+                                //
+                                preStartPage.prePanel = game.add.sprite(50, 100, 'PIC_PRESTART_PANEL', null, preStartPage);
+                                preStartPage.prePanel.scale.set(0.68, 0.68);
+
+                                preStartPage.boy = game.add.sprite(1026, 141, 'PIC_GAME_DESIGNER', null, preStartPage);
+
+                                preStartPage.button = game.add.button(375, 356, 'PIC_BIG_BTN_BASE', startClick, this, 0, 1, 2, null, preStartPage);
+                                preStartPage.button.anchor.setTo(0.5, 0.5);
+
+                                preStartPage.btnCap = game.add.sprite(375, 356, 'PIC_BTN_CAPTION', null, preStartPage);
+                                preStartPage.btnCap.anchor.setTo(0.5, 0.5);
+
+                                preStartPage.explCap = game.add.text(375, 218, "Memorize numbers before\n they're hidden and then dial\n them to receive memory points. ",
+                                        {fill: "#991e01", font: "40px Arial", align: "center", wordWrap: true, wordWrapWidth: 570}, preStartPage);
+                                preStartPage.explCap.anchor.setTo(0.5, 0.5);
+
+                                //#991e01 - цвет заголовка, Voces Regular, 45
+                            }
+
+                            showNumbersTimer = game.time.create(false);
+                            delayTimer = game.time.create(false);
+
+                            //fpsInformer = game.add.text(50,50,'FPS');
+                            this.game.time.advancedTiming = true;
+
+                            //console.log('after reset');
+                            scrScrn = new ScoreScreen(game, resetMinigame);
+                            scrScrn.init();
+
+                            Init();
+
+                            //	mainCloseBtn=game.add.button(931, 69, 'PIC_CLOSE_BTN', closeClick, this, 1, 0, 2);
+                            //	mainCloseBtn.anchor.setTo(0.5, 0.5);
+                            //	mainCloseBtn.scale.set(1.5, 1.5);
+                        }
+
+                        function resetMinigame() {
+                            //console.log('resetMinigame');
+                            scrScrn.hide();
+                            Init();
+                        }
+
+                        function Init() {
+                            //console.log('Init');
+                            errorsNum = 0;
+                            roundNum = 0;
+                            thisRoundHits = 0;
+                            currentDigScr = 1;
+                            totScr = 0;
+
+                            informers[0].reset('memory', false, 200, 70, 96, true);
+                            informers[1].reset('round', true, 10, 70);
+                            informers[2].reset('errors', false, 30, 70, 96, false);
+
+                            showPreStartPage();
+
+                            //	showNumbersTimer.stop();
+                            //	delayTimer.stop();
+                            for (var i = 0; i < guessedNums.length; i++) {
+                                guessedNums[i].content.visible = false;
+
+                            }
+                            playSound('SND_LEVEL_START1');
+
+                            setGamePhase(0);
+                        }
+
+                        function showPreStartPage() {
+                            preStartPage.boy.x = 1026;
+                            preStartPage.visible = true;
+                            game.add.tween(preStartPage.boy).to({x: 566}, 1000, Phaser.Easing.Linear.None, true, 0, 0, false);
+
+                        }
+
+                        function setGamePhase(ph) {
+                            gamePhase = ph;
+                            switch (ph) {
+                                case 0:
+                                {
+                                    commandText.frame = 0;
+                                    break;
+                                }
+                                case 1:
+                                {
+                                    commandText.frame = 0;
+                                    roundNum++;
+                                    initNumbers4CurrentRound();
+                                    setScrore(1, roundNum);
+                                    //dispatchEvent(new ScoreEvent(ScoreEvent.OTHER_INF, roundNum, 0));
+                                    startShowingNumbers();
+                                    thisRoundHits = 0;
+                                    break;
+                                }
+                                case 2:
+                                {
+                                    startHidingNumbers();
+                                    break;
+                                }
+                                case 3:
+                                {
+                                    playSound('SND_QUESTION', 4);
+                                    commandText.frame = 1;
+                                    currentShownNumber = 0;
+                                    break;
+                                }
+                            }
+                        }
+
+                        function initNumbers4CurrentRound() {
+                            num2Guess = digitsByRounds[roundNum - 1];
+                            var scl = 0.64;
+                            if (num2Guess <= 4) {
+                                scl = 1.0;
+                            }
+                            if (num2Guess >= 8) {
+                                scl = 0.45;
+                            }
+
+                            for (var i = 0; i < guessedNums.length; i++) {
+                                guessedNums[i].visible = false;
+                                guessedNums[i].clear();
+
+                            }
+
+                            for (i = 0; i < num2Guess; i++) {
+                                gn = guessedNums[i];
+                                gn.setScale(scl);
+                                gn.setCoordsInLine(i, num2Guess);
+                                gn.content.visible = true;
+                            }
+                        }
+
+                        function startShowingNumbers() {
+                            showNumbersTimerRepeatCount = num2Guess + 3;
+
+
+                            currentShownNumber = 0;
+                            showNumbersTimerDelay = 300;
+                            showNumbersTimer.add(showNumbersTimerDelay, onShownNumberTimer, this);
+                            showNumbersTimer.start();
+                            //	showNumbersTimer.reset();
+                            //	showNumbersTimer.start();
+                        }
+
+                        function onShownNumberTimer() {
+
+                            if (currentShownNumber < num2Guess) {
+                                var gn = guessedNums[currentShownNumber];
+                                if (gamePhase == 1) {
+                                    gn.showNewRandomNumber();
+                                    playSound('SND_DIAL_NUM_0' + gn.num);
+                                }
+                                else {
+                                    if (gamePhase == 2) {
+                                        gn.showQuestionMark();
+                                        playSound('SND_POP', 3);
+                                    }
+                                }
+                            }
+
+                            currentShownNumber++;
+
+                            if (currentShownNumber >= showNumbersTimerRepeatCount) {
+                                //COMPLETE
+                                if (gamePhase == 1) {
+                                    setGamePhase(2);
+                                }
+                                else {
+                                    if (gamePhase == 2) {
+                                        setGamePhase(3);
+                                    }
+                                }
+                            }
+                            else {//1 more iteration
+                                showNumbersTimer.add(showNumbersTimerDelay, onShownNumberTimer, this);
+                            }
+                        }
+
+                        function startHidingNumbers() {
+                            showNumbersTimerRepeatCount = num2Guess;
+                            showNumbersTimerDelay = 450;
+                            currentShownNumber = 0;
+                            showNumbersTimer.add(showNumbersTimerDelay, onShownNumberTimer, this);
+                            showNumbersTimer.start();
+                            //	showNumbersTimer.reset();
+                            //	showNumbersTimer.start();
+                        }
+
+                        // THE GAME IS GOING TO BE UPDATED
+                        function update() {
+
+
+                        }
+
+                        function render() {
+                            //fpsInformer.setText("FPS: " + this.game.time.fps);
+                        }
+
+                        function makeDialButton(tg, x, y) {
+                            var button = game.add.button(x, y, 'PIC_DIALBTN_INNER', dialClick, this, 0, 2, 1);
+                            button.tag = tg % 10;
+                            button.anchor.setTo(0.5, 0.5);
+                            button.input.useHandCursor = true;
+
+                            button.smoothed = true;
+                            button.btnNumText = game.add.sprite(x - 2, y - 3, 'PIC_DIALBTN_TEXTS', 9 - tg % 10);
+                            button.btnNumText.anchor.setTo(0.5, 0.5);
+
+                        }
+
+                        function startClick(button) {
+                            //console.log('startClick');
+                            //console.log(preStartPage);
+                            //console.log(preStartPage.visible);
+
+                            preStartPage.visible = false;
+
+
+                            playSound('SND_BTN_DOWN', 3);
+                            setGamePhase(1);
+                        }
+
+                        function closeClick(button) {
+                            //console.log('closeClick');
+
+                        }
+
+
+                        function dialClick(button) {
+                            if (gamePhase == 3) {
+                                var gn = guessedNums[currentShownNumber];
+                                //
+
+                                //угадали или нет
+                                var b = gn.showDialResult(button.tag);
+
+                                if (b) {
+                                    thisRoundHits++;
+                                    playSound('SND_DIAL_NUM_0' + button.tag);
+                                    var scr = currentDigScr;//Math.ceil(thisRoundHits*thisRoundHits*thisRoundHits/15);
+                                    totScr += scr;
+                                    setScrore(0, scr, true);
+                                    //	currentDigScr++; после каждой цифры увеличивать не будем
+
+                                }
+                                else {
+                                    errorsNum++;
+                                    playSound('SND_ERROR', 3);
+                                    setScrore(2, errorsNum);
+                                    //dispatchEvent(new ScoreEvent(ScoreEvent.OTHER_INF, errorsNum, 1));
+                                    currentDigScr = 1;
+                                }
+
+                                currentShownNumber++;
+                                //дошли ли до конца строки
+                                if (currentShownNumber == num2Guess) {
+                                    if (thisRoundHits == num2Guess) {
+                                        currentDigScr++;//увеличиваем после успешного раунда
+                                    }
+
+                                    //	dispatchEvent(new ScoreEvent(ScoreEvent.SCORE_ADD, scr, ScoreEvent.SCORE_MEM));
+                                    //
+
+                                    //конец ли игре
+                                    if (roundNum == maxRounds) {
+
+                                        scrScrn.show(totScr);
+                                        playSound('SND_LEVEL_FINISHED1');
+                                        setGamePhase(4);
+                                    }
+                                    else {
+                                        setGamePhase(4);
+                                        delayTimer.add(400, onDelayTimer, this);
+                                        delayTimer.start();
+                                    }
+                                }
+                            }
+
+
+                        }
+
+                        function playSound(pref, vars) {
+                            //	console.log('playSound '+pref);
+                            //	console.log(vars);
+
+                            if (vars) {
+                                var r = 1;
+                                if (vars > 1) {
+                                    r = Math.floor(Math.random() * vars) + 1;
+                                }
+                                fx.play(pref + r);
+                            }
+                            else {
+                                fx.play(pref)
+                            }
+                        }
+
+                        function onDelayTimer() {
+                            setGamePhase(1);
+                        }
+
+                        function setScrore(infId, scr, add) {
+                            switch (infId) {
+                                case 0:
+                                {//memory
+                                    break;
+                                }
+
+                                case 1:
+                                {//round
+                                    break;
+                                }
+
+                                case 2:
+                                {//errors
+                                    break;
+                                }
+
+                            }
+                            //console.log('setScrore '+scr+' '+infId+' '+add);
+                            //	game.onScore.dispatch(add);
+                            if (add) {
+                                informers[infId].addScore(scr);
+                            }
+                            else {
+                                informers[infId].showScore(scr);
+                            }
+                        }
+
+                        return {
+                            create: create,
+                            update: update,
+                            render: render
+                        }
+                    }
+
+                    game.state.add('bootScreen', this.bootScreen);
+                    game.state.add('loadScreen', this.loadScreen);
+                    game.state.add('gameScreen', this.gameScreen);
+                    game.state.start('bootScreen');
+                    this.game = game;
 	    		};
 		</script>
     </head>

@@ -21,57 +21,69 @@
 				// onPreload to be executed when the game preloads
 				// onCreate to be executed once the game is firstly created
 				// onUpdate to be called every time the game us updated
-				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '', {preload: preload, create: create, update: update, render:render});
-				game.onScore = new Phaser.Signal();
-				game.on = function(event, listener) {
-					event = event.charAt(0).toUpperCase() + event.slice(1);
-					if(game.hasOwnProperty('on' + event)) {
-						console.log('has property');
-						game['on' + event].add(listener);
-					} else {
-						console.log('do not have- on' + event)
-					}
-				};	
-				
-				window.game = game;
-				
-				
-				var preloadProgress = null;
-				var preloadText = null;
-				function preload() {
-					preloadProgress = game.add.group();
-					
-					preloadText = game.add.text(10,10,'Loading',{fill:"#ffffff"});
-					preloadProgress.add(preloadText);
-				
-					game.load.image('PIC_BGD', 'assets/kneo_assets/bg.png');
-					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png'); 
-					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
-					
-					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
-					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
-					
-					game.load.bitmapFont('PIC_FONT', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
-					game.load.bitmapFont('PIC_FONT2', 'assets/fonts/font2.png', 'assets/fonts/font2.fnt');
-					game.load.bitmapFont('PIC_FONT24', 'assets/fonts/font24.png', 'assets/fonts/font24.fnt');
-					
-					game.load.image('PIC_GREEN_DOT', 'assets/kneo_assets/green_dot.png');
-					game.load.image('PIC_RED_DOT', 'assets/kneo_assets/red_dot.png');
-					game.load.image('PIC_LINE', 'assets/kneo_assets/line.png');
-					
-					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);								
-					
-					game.load.atlasJSONArray('PIC_GENRE_ICONS', 'assets/GenreSideSymbol.png', 'assets/GenreSideSymbol.json');
-				
-					
-					game.load.atlasJSONArray('PIC_ALL_ART', 'assets/art.png', 'assets/art.json');
-					
-					
-					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
-					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');					
-					
-					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');	
-				}
+                var game = new Phaser.Game(1000, 750, Phaser.AUTO, '');
+                this.bootScreen = function() {
+                    function preload() {
+                        game.load.image('LOADER_BG', 'assets/kneo_assets/loaderBg.png');
+                        game.load.image('LOADER_BAR', 'assets/kneo_assets/loader.png');
+                    }
+                    function create() {
+                        game.state.start('loadScreen');
+                    }
+
+                    return {
+                        preload: preload,
+                        create: create
+                    }
+                };
+
+
+                this.loadScreen = function() {
+                    function preload() {
+                        game.load.image('PIC_BGD', 'assets/kneo_assets/bg.png');
+                        game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
+                        game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+
+                        game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+                        game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');
+
+                        game.load.bitmapFont('PIC_FONT', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
+                        game.load.bitmapFont('PIC_FONT2', 'assets/fonts/font2.png', 'assets/fonts/font2.fnt');
+                        game.load.bitmapFont('PIC_FONT24', 'assets/fonts/font24.png', 'assets/fonts/font24.fnt');
+
+                        game.load.image('PIC_GREEN_DOT', 'assets/kneo_assets/green_dot.png');
+                        game.load.image('PIC_RED_DOT', 'assets/kneo_assets/red_dot.png');
+                        game.load.image('PIC_LINE', 'assets/kneo_assets/line.png');
+
+                        game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);
+
+                        game.load.atlasJSONArray('PIC_GENRE_ICONS', 'assets/GenreSideSymbol.png', 'assets/GenreSideSymbol.json');
+
+
+                        game.load.atlasJSONArray('PIC_ALL_ART', 'assets/art.png', 'assets/art.json');
+
+
+                        game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
+                        game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');
+
+                        game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');
+
+                        // LOADER
+                        game.add.sprite(0, 0, 'LOADER_BG');
+                        game.load.setPreloadSprite(game.add.sprite(331, 380, 'LOADER_BAR'));
+
+                    }
+                    function create() {
+                        game.state.start('gameScreen');
+                    }
+
+                    return {
+                        preload: preload,
+                        create: create
+                    }
+                };
+
+                this.gameScreen = function() {
 				
 				var shp = null;//:ShapeWithPoints;
 				var gamePhase = 0;//1 - надо тянуть, 2 - тянем, 3 - показываем результат
@@ -374,7 +386,6 @@
 				
 				function endGame() {
 					totScr = informers[0].score;
-					game.onScore.dispatch(totScr);
 					scrScrn.show(totScr);
 					playSound('SND_LEVEL_FINISHED1');				
 				}
@@ -455,13 +466,20 @@
 						informers[infId].showScore(scr);
 					}
 				}
-				
-				game.on('score', function() {
-					console.log('@@@@@@@@@@@@@@@@on score', arguments);
-				});				
-				
-				
-	    		};
+
+                return {
+                    create: create,
+                    update: update,
+                    render: render
+                }
+            }
+
+            game.state.add('bootScreen', this.bootScreen);
+            game.state.add('loadScreen', this.loadScreen);
+            game.state.add('gameScreen', this.gameScreen);
+            game.state.start('bootScreen');
+            this.game = game;
+            };
 		</script>
     </head>
     <body>

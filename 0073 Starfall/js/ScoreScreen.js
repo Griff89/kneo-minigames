@@ -66,6 +66,7 @@ ScoreScreen.prototype = {
 
         if (parent.window.kw && parent.window.app && parent.window.app.getMediator) {
             parent.window.app.getMediator().trigger('onSetScore', 73, +scr.toFixed(0));
+            parent.window.app.getMediator().trigger('onLevelUp', 73);
         }
 	},
 	
