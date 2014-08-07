@@ -1,0 +1,502 @@
+<!doctype html>
+<html>
+	<head>
+    		<script src="js/phaser.min.js"></script>
+			<script src="js/Routines.js"></script>
+    		<script src="js/Infr.js"></script>
+			<script src="js/ScoreScreen.js"></script>
+
+			<script src="js/CircleWithCentre.js"></script>
+			<script src="js/PreStartPage.js"></script>
+
+    		<style>
+    			body{margin:0}
+    		</style>
+    		<script type="text/javascript">
+			window.onload = function() {
+				// here we define a new 640x480 game, with three core functions:
+				// onPreload to be executed when the game preloads
+				// onCreate to be executed once the game is firstly created
+				// onUpdate to be called every time the game us updated
+				var game = new Phaser.Game(1000, 750, Phaser.CANVAS, '', {preload: preload, create: create, update: update, render:render});
+				game.onScore = new Phaser.Signal();
+				game.on = function(event, listener) {
+					event = event.charAt(0).toUpperCase() + event.slice(1);
+					if(game.hasOwnProperty('on' + event)) {
+						console.log('has property');
+						game['on' + event].add(listener);
+					} else {
+						console.log('do not have- on' + event)
+					}
+				};	
+				
+				window.game = game;
+				
+				
+				var preloadProgress = null;
+				var preloadText = null;
+				function preload() {
+                    preloadProgress = game.add.group();
+
+                    preloadText = game.add.text(10, 10, 'Loading', {fill: "#ffffff"});
+                    preloadProgress.add(preloadText);
+
+                    game.load.image('PIC_BGD', 'assets/bg.png');
+                    game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
+                    game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+
+                    game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+                    game.load.spritesheet('CIRCLES', 'assets/kneo_assets/circles.png', 175, 175);
+                    game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');
+
+                    game.load.bitmapFont('red', 'assets/fonts/red.png', 'assets/fonts/red.fnt');
+                    game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);
+
+
+                    game.load.atlasJSONArray('PIC_GENRE_ICONS', 'assets/GenreSideSymbol.png', 'assets/GenreSideSymbol.json');
+
+                    game.load.spritesheet('PIC_SCORE_FLAG', 'assets/ScoreFlag.png', 54, 147);
+                    game.load.atlasJSONArray('PIC_ALL_ART', 'assets/art.png', 'assets/art.json');
+                    game.load.atlasJSONArray('PIC_ART_GEOM', 'assets/artGeom.png', 'assets/artGeom.json');
+
+                    game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224, 189);
+                    game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');
+
+                    game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');
+                }
+				
+				
+				var circles  = [];
+				var clickedCirclesNum = 0;
+				
+				var fadeBMD = null;
+				var fadeBMP = null;
+				
+				var delayTimer = null;
+				//var fadeTwn:UltimateTweener;
+				
+				var subTask = 0;
+		
+				var totScr=0;
+				
+				var informers=[];
+				var preStartPage = null;
+				
+				var scrScrn = null;
+				var lvlCap = null;
+				
+				var fpsInformer;
+				var fx;				
+				// THE GAME HAS BEEN CREATED
+				function create() {
+
+					//Sounds init
+					{
+					fx = game.add.audio('sfx');
+					fx.override = true;//??? зачем это?
+					fx.addMarker('SND_QUESTION1', 0, 0.39);
+					fx.addMarker('SND_QUESTION2', 0.42, 0.39);
+					fx.addMarker('SND_QUESTION3', 0.85, 0.39);
+					fx.addMarker('SND_QUESTION4', 1.272, 0.349);
+					fx.addMarker('SND_POP1', 1.666, 0.079);
+					fx.addMarker('SND_POP2', 1.798, 0.075);
+					fx.addMarker('SND_POP3', 1.886, 0.046);
+					fx.addMarker('SND_LVL_START1', 1.931, 3.469);
+					fx.addMarker('SND_LEVEL_FINISHED1', 5.4, 4.582);
+					fx.addMarker('SND_ERROR1', 9.982, 0.836);
+					fx.addMarker('SND_ERROR2', 10.819, 1.033);
+					fx.addMarker('SND_ERROR3', 11.852, 0.738);
+					fx.addMarker('SND_DIAL_NUM_00', 12.590, 0.287);
+					fx.addMarker('SND_DIAL_NUM_01', 12.877, 0.287);
+					fx.addMarker('SND_DIAL_NUM_02', 13.184, 0.294);
+					fx.addMarker('SND_DIAL_NUM_03', 13.478, 0.287);
+					fx.addMarker('SND_DIAL_NUM_04', 13.766, 0.287);
+					fx.addMarker('SND_DIAL_NUM_05', 14.054, 0.287);
+					fx.addMarker('SND_DIAL_NUM_06', 14.340, 0.287);
+					fx.addMarker('SND_DIAL_NUM_07', 14.627, 0.313);
+					fx.addMarker('SND_DIAL_NUM_08', 14.941, 0.287);
+					fx.addMarker('SND_DIAL_NUM_09', 15.228, 0.287);
+					fx.addMarker('SND_BTN_DOWN1', 15.516, 0.102);
+					fx.addMarker('SND_BTN_DOWN2', 15.668, 0.096);
+					fx.addMarker('SND_BTN_DOWN3', 15.814, 0.134);
+					
+					fx.addMarker('SND_NOTE_A0', 15.998, 1.326);
+					fx.addMarker('SND_NOTE_A1', 17.424, 1.290);
+					fx.addMarker('SND_NOTE_A2', 18.714, 1.255);
+					fx.addMarker('SND_NOTE_A3', 19.969, 1.219);
+					fx.addMarker('SND_NOTE_A4', 21.188, 1.169);
+					fx.addMarker('SND_NOTE_A5', 22.357, 1.219);
+					fx.addMarker('SND_NOTE_A6', 23.576, 0.955);
+					
+					fx.addMarker('SND_SUCCESS1', 24.532, 1.776);
+					fx.addMarker('SND_SUCCESS2', 26.308, 1.649);
+					fx.addMarker('SND_SUCCESS3', 27.957, 1.882);					
+					
+					fx.addMarker('SND_CARD_OPEN1', 29.839, 0.222);
+					fx.addMarker('SND_CARD_OPEN2', 30.060, 0.318);
+					fx.addMarker('SND_CARD_OPEN3', 30.378, 0.236);
+					
+					fx.addMarker('SND_CARD_CLOSE1', 30.615, 0.252);
+					fx.addMarker('SND_CARD_CLOSE2', 30.867, 0.227);
+					fx.addMarker('SND_CARD_CLOSE3', 31.093, 0.227);
+					
+					fx.addMarker('SND_LVL_SCENE_CHANGE1', 31.320, 1.380);
+					
+					fx.addMarker('SND_PREC_RES_01', 32.700, 0.499);
+					fx.addMarker('SND_PREC_RES_02', 33.199, 0.529);
+					fx.addMarker('SND_PREC_RES_03', 33.727, 0.560);
+					fx.addMarker('SND_PREC_RES_04', 34.287, 0.422);
+					fx.addMarker('SND_PREC_RES_05', 34.710, 0.447);
+					fx.addMarker('SND_PREC_RES_06', 35.157, 0.474);
+					fx.addMarker('SND_PREC_RES_07', 35.630, 0.307);
+					fx.addMarker('SND_PREC_RES_08', 35.937, 0.325);
+					
+					fx.addMarker('SND_EXCLAMATION1', 36.262, 0.583);
+					fx.addMarker('SND_EXCLAMATION2', 36.845, 0.436);
+					fx.addMarker('SND_EXCLAMATION3', 37.281, 0.490);
+					fx.addMarker('SND_EXCLAMATION4', 37.771, 0.550);
+					
+					fx.addMarker('SND_TICK1', 38.321, 0.326);
+					fx.addMarker('SND_TICK2', 38.647, 0.312);
+					fx.addMarker('SND_TICK3', 38.959, 0.302);
+					
+					fx.addMarker('SND_POP1', 39.260, 0.129);
+					fx.addMarker('SND_POP2', 39.389, 0.085);
+					fx.addMarker('SND_POP3', 39.474, 0.046);
+					
+					fx.addMarker('SND_LVL_QUEST_CHANGE1', 39.520, 1.990);
+					
+					fx.addMarker('SND_BOW1', 41.510, 0.204);
+					fx.addMarker('SND_BOW2', 41.714, 0.193);
+					fx.addMarker('SND_BOW3', 41.907, 0.182);
+
+					}
+					game.add.sprite(0, 0, 'PIC_BGD');
+					console.log('create');
+					
+					
+					fadeBMD = game.add.renderTexture(640,480);
+					fadeBMP = game.add.image(0,0,fadeBMD);
+					fadeBMP.visible = false;
+					
+					for (var i = 0; i < 3; i++) {
+						var cl = new CircleWithCentre(game);
+						cl.init();
+						circles.push(cl);
+						
+						cl.base.inputEnabled = true;
+						cl.base.input.start(0, true);
+						cl.base.events.onInputDown.add(onCircleMouseDown, this);						
+					}		
+					
+					delayTimer = game.time.create(false);
+				//	game.input.onDown.add(onDown, this);
+				
+					//circles[0].content.cacheAsBitmap = true;
+				//	fadeBMD.renderXY(circles[0].content,100,100);
+					//circles[0].drawOnBMD(fadeBMD);
+					//TODO: how to draw groups or texts to BMD
+			
+					preStartPage=new PreStartPage(game, startClick);
+					preStartPage.init("Click the circles centres");
+						
+					
+					scrScrn = new ScoreScreen(game, resetMinigame);
+					scrScrn.init();
+
+                    // precision
+					var inf=new Infr(game, playSound);
+					inf.init(65, 116);
+					informers.push(inf);
+
+                    // circle
+					var inf=new Infr(game, playSound);
+					inf.init(830, 116);
+					informers.push(inf);
+					
+					
+
+					
+					Init();
+					//fpsInformer = game.add.text(50,50,'FPS');
+					this.game.time.advancedTiming = true;
+				}
+				
+				
+			//	function onFadeComplete() 
+			//	{
+			//		if (fadeBMP.parent) {
+			//			removeChild(fadeBMP);
+			//		}
+			//	}
+				
+				function fade2Next() {
+			//		fadeBMD.fillRect(fadeBMD.rect, 0xFFFFFFFF);
+					var len=circles.length;
+					for (var i=0; i<len; i++){
+						fadeBMD.renderXY(circles[i].content, circles[i].content.x,circles[i].content.y,i==0);
+					}
+					
+					fadeBMP.alpha = 1;
+					fadeBMP.visible = true;
+					
+					var twn = game.add.tween(fadeBMP);
+					twn.to({alpha:0},500);
+					twn.start();
+					
+			//		addChild(fadeBMP);
+			//		fadeTwn.tweenItem2State(fadeBMP, 15, -1000, -1000, -1000, -1000, -1000, 0);
+					playSound('SND_LVL_QUEST_CHANGE1');
+					delayTimer.add(500, onDelayTimer, this);
+					delayTimer.start();
+				}
+
+				
+				function initSteady() 
+				{
+					subTask = 0;
+					var id = 0;
+					var len = circles.length;
+					for (var i=0; i<len; i++) {
+						var cl = circles[i];
+						cl.reset(id + 1);
+						cl.content.x = 370 + 125 * id;
+						cl.content.y = ((id % 2) == 0)?460:303;
+						cl.content.visible = true;
+						id++;
+					}
+				}
+				
+				function initVerticalMovement() 
+				{
+					var id = 0;
+					
+					var len = circles.length;
+					for (var i=0; i<len; i++) {
+						var cl = circles[i];
+						cl.reset(id + 4);
+						cl.initVerticalMovement(146, 371, 370 + id * 163, ((id % 2) == 0)?500:343);
+						id++;
+					}
+				}
+				
+				function initCircleMovement() 
+				{
+					var id = 0;
+					var len = circles.length;
+					for (var i=0; i<len; i++) {
+						var cl = circles[i];
+						cl.reset(id + 7);
+						cl.initCircleMovement(480, 400, 100, id * 2 * Math.PI / 3);
+						id++;
+					}			
+				}
+				
+				function onFrame() 
+				{
+					var len = circles.length;
+					if (subTask == 1) {					
+						for (var i=0; i<len; i++) {
+							var cl = circles[i];
+							cl.doVerticalMovement(2);
+						}
+					}
+					if (subTask == 2) {
+						for (var i=0; i<len; i++) {
+							var cl = circles[i];
+							cl.doCircleMovement(0.02);
+						}
+					}
+				}
+				
+				
+				
+				function onDelayTimer(){
+					fadeBMP.visible = false;
+				//	switch (clickedCirclesNum) {
+				//		case 3: {
+				//			subTask = 1;
+				//			initVerticalMovement();
+				//			break;
+				//		}
+				//		case 6: {
+				//			subTask = 2;
+				//			initCircleMovement();
+				//			break;
+				//		}				
+				//	} 
+				}
+				function onCircleMouseDown(item, pointer) 
+				{
+					console.log('onCircleMouseDown');
+					var cl = item.owner;
+					
+					if (!cl.mouseEnabled){return;}
+					cl.react2Click(pointer);
+					playSound('SND_BOW',3);
+					playSound('SND_PREC_RES_0' + cl.hitRating);
+					clickedCirclesNum++;
+				//	trace('percent:', cl.clickRating);
+					var scr = Routines.prototype.calcCircleCentreScore(cl.clickRating);
+					setScore(0, scr, true);
+					setScore(1, clickedCirclesNum);
+					
+					switch (clickedCirclesNum) {
+						case 3: {
+							subTask = 1;
+							fade2Next();
+							initVerticalMovement();//  -вынесли в делей таймер
+						
+							break;
+						}
+						case 6: {
+							subTask = 2;
+							fade2Next();
+							initCircleMovement();
+						
+							break;
+						}
+						case 9: {
+							subTask = 4;
+							endGame();
+							//end
+							break;
+						}
+					}
+					if (clickedCirclesNum == 3) {
+						
+						if (subTask < 2) {
+							
+						}
+					}
+
+				}				
+				
+				
+				function Init() {
+					informers[0].reset(3,1,'precision',false,200, 130);	
+					
+					informers[1].reset(8,1,'circles',true,10, 100);					
+								
+					
+					playSound('SND_LVL_START1');
+					
+					preStartPage.show();
+				
+					clickedCirclesNum = 0;
+					initSteady();
+				
+				}
+				
+				function endGame() {
+					totScr = informers[0].score;
+					game.onScore.dispatch(totScr);
+					scrScrn.show(totScr);
+					playSound('SND_LEVEL_FINISHED1');				
+				}
+				
+				
+				function resetMinigame() {
+					console.log('resetMinigame');
+					scrScrn.hide();
+					Init();
+				}
+				
+				
+				function onClick(item, pointer) {
+
+				}				
+
+				
+				function mashAr(ar) 
+				{
+					var len = ar.length;
+					for (var i = 0; i < len; i++) {
+						var n = i + Math.floor(Math.random() * (len - i));
+						var t = ar[n];
+						ar[n] = ar[i];
+						ar[i] = t;
+					}
+				}
+				
+				// THE GAME IS GOING TO BE UPDATED
+				function update() {
+				//	console.log(getTimer());
+					onFrame();
+	    		}
+				
+				function getDistanceBetween(x1,y1,x2,y2){
+					return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+				}	
+				
+				function randomNumberFromTo(mn,mx){
+					return Math.floor(mn+(mx-mn)*Math.random());
+				}			
+				
+				function isDistBetweenPtsSmallerThan(x1,y1,x2,y2,threshold){
+					var dx = Math.abs(x2 - x1);
+					var dy = Math.abs(y2 - y1);
+					var trSQR = threshold * threshold;
+					if (dx > threshold) { return false }
+					if (dy > threshold) { return false }
+					if ((dx<threshold*0.7)&&(dy<threshold*0.7)){return true}
+					return (dx * dx + dy * dy < trSQR);					
+				}
+				
+				function render() {
+					//fpsInformer.setText("FPS: " + this.game.time.fps);
+	    		}
+				
+				
+				
+				function startClick(button) {
+					preStartPage.hide();
+					playSound('SND_BTN_DOWN',3);
+
+				//	onTimeStarted();
+				}
+				
+				function playSound(pref,vars) {
+					console.log('playSound '+pref);
+					console.log(vars);
+
+					if (vars){
+						var r=1;
+						if (vars>1){
+							r = Math.floor(Math.random()*vars)+1;
+						}	
+						fx.play(pref+r);
+					}
+					else{
+						fx.play(pref)
+					}					
+				}	
+				
+				function setScore(infId, scr, add)
+				{
+					console.log('setScrore '+scr+' '+infId+' '+add);
+					console.log(informers[infId]);
+					if (add){
+						informers[infId].addScore(scr);
+					}
+					else{
+						informers[infId].showScore(scr);
+					}
+				}
+				
+				game.on('score', function() {
+					console.log('@@@@@@@@@@@@@@@@on score', arguments);
+				});				
+				
+				
+	    		};
+		</script>
+    </head>
+    <body>
+    </body>
+</html>
+
+
+
+
+

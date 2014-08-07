@@ -1,0 +1,602 @@
+<!doctype html>
+<html>
+	<head>
+    		<script src="js/phaser.min.js"></script>
+    		<script src="js/Infr.js"></script>
+			<script src="js/ScoreScreen.js"></script>
+			<script src="js/PreStartPage.js"></script>
+    		<style>
+    			body{margin:0}
+    		</style>
+    		<script type="text/javascript">
+			window.onload = function() {
+				// here we define a new 640x480 game, with three core functions:
+				// onPreload to be executed when the game preloads
+				// onCreate to be executed once the game is firstly created
+				// onUpdate to be called every time the game us updated
+				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '', {preload: preload, create: create, update: update, render:render});
+				game.onScore = new Phaser.Signal();
+				game.on = function(event, listener) {
+					event = event.charAt(0).toUpperCase() + event.slice(1);
+					if(game.hasOwnProperty('on' + event)) {
+						console.log('has property');
+						game['on' + event].add(listener);
+					} else {
+						console.log('do not have- on' + event)
+					}
+				};	
+				
+				window.game = game;
+				
+				
+				var preloadProgress = null;
+				var preloadText = null;
+				function preload() {
+					preloadProgress = game.add.group();
+					
+					preloadText = game.add.text(10,10,'Loading',{fill:"#ffffff"});
+					preloadProgress.add(preloadText);
+
+				
+					game.load.image('PIC_BGD', 'assets/kneo_assets/Pathfinder-background.png');
+					game.load.image('PIC_CAPTION', 'assets/kneo_assets/Pathfinder-titlebar.png');
+					game.load.spritesheet('PIC_SHIP', 'assets/kneo_assets/Pathfinder-spaceship1.png', 139,61);
+					game.load.spritesheet('PIC_HOME', 'assets/kneo_assets/Pathfinder-home.png', 277,294); 
+					game.load.image('PIC_DRAG1', 'assets/kneo_assets/Pathfinder-drag-this.png');
+					game.load.image('PIC_DRAG2', 'assets/kneo_assets/Pathfinder-drag-here.png');
+					
+					game.load.spritesheet('PIC_ASTEROIDS', 'assets/kneo_assets/asteroids.png',113, 79);
+					
+				
+					
+					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
+					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+					
+					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
+					
+					game.load.bitmapFont('white', 'assets/fonts/white.png', 'assets/fonts/white.fnt');
+					game.load.bitmapFont('blue', 'assets/fonts/blue.png', 'assets/fonts/blue.fnt');
+					
+					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);
+					
+					game.load.atlasJSONArray('PIC_GENRE_ICONS', 'assets/GenreSideSymbol.png', 'assets/GenreSideSymbol.json');
+					game.load.spritesheet('PIC_SCORE_FLAG', 'assets/ScoreFlag.png', 54,147);					
+					game.load.atlasXML('PIC_ALL_ART', 'assets/art.png', 'assets/art.xml');
+					
+					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
+					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');					
+					
+					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');	
+				}
+				
+				
+				var disk = null;//DraggedDisk; 
+				var prevDiskX = 0;
+				var prevDiskY = 0;
+				
+				var errorMarker = null;//:ErrorMarker;
+				var placedSymbol = null;//:DiskPlacedSymbol;		
+				
+				var gamePhase = 0;//0 - подготовка, 1 - показываем препятствия, 2 - гасим препятствия, 3 - можно ехать
+				var errorsNum = 0;
+				var roundNum = 0;
+				
+				var obstaclesCoords = [];
+				
+				var dangObj = null;//:DangerousSquare;
+				var safeHome = null//:SafeHome;
+				
+				var imgBMD = null//:BitmapData;
+				//var chkBMD:BitmapData;
+				
+				var imgBMP = null//:Bitmap;
+				
+				var totScr=0;
+				
+				var informers=[];
+				var preStartPage = null;
+				
+				var scrScrn = null;
+				
+				
+				//var fpsInformer;
+				var fx;				
+				// THE GAME HAS BEEN CREATED
+				function create() {
+
+					//Sounds init
+					{
+					fx = game.add.audio('sfx');
+					fx.override = true;//??? зачем это?
+					fx.addMarker('SND_QUESTION1', 0, 0.39);
+					fx.addMarker('SND_QUESTION2', 0.42, 0.39);
+					fx.addMarker('SND_QUESTION3', 0.85, 0.39);
+					fx.addMarker('SND_QUESTION4', 1.272, 0.349);
+					fx.addMarker('SND_POP1', 1.666, 0.079);
+					fx.addMarker('SND_POP2', 1.798, 0.075);
+					fx.addMarker('SND_POP3', 1.886, 0.046);
+					fx.addMarker('SND_LVL_START1', 1.931, 3.469);
+					fx.addMarker('SND_LEVEL_FINISHED1', 5.4, 4.582);
+					fx.addMarker('SND_ERROR1', 9.982, 0.836);
+					fx.addMarker('SND_ERROR2', 10.819, 1.033);
+					fx.addMarker('SND_ERROR3', 11.852, 0.738);
+					fx.addMarker('SND_DIAL_NUM_00', 12.590, 0.287);
+					fx.addMarker('SND_DIAL_NUM_01', 12.877, 0.287);
+					fx.addMarker('SND_DIAL_NUM_02', 13.184, 0.294);
+					fx.addMarker('SND_DIAL_NUM_03', 13.478, 0.287);
+					fx.addMarker('SND_DIAL_NUM_04', 13.766, 0.287);
+					fx.addMarker('SND_DIAL_NUM_05', 14.054, 0.287);
+					fx.addMarker('SND_DIAL_NUM_06', 14.340, 0.287);
+					fx.addMarker('SND_DIAL_NUM_07', 14.627, 0.313);
+					fx.addMarker('SND_DIAL_NUM_08', 14.941, 0.287);
+					fx.addMarker('SND_DIAL_NUM_09', 15.228, 0.287);
+					fx.addMarker('SND_BTN_DOWN1', 15.516, 0.102);
+					fx.addMarker('SND_BTN_DOWN2', 15.668, 0.096);
+					fx.addMarker('SND_BTN_DOWN3', 15.814, 0.134);
+					
+					fx.addMarker('SND_NOTE_A0', 15.998, 1.326);
+					fx.addMarker('SND_NOTE_A1', 17.424, 1.290);
+					fx.addMarker('SND_NOTE_A2', 18.714, 1.255);
+					fx.addMarker('SND_NOTE_A3', 19.969, 1.219);
+					fx.addMarker('SND_NOTE_A4', 21.188, 1.169);
+					fx.addMarker('SND_NOTE_A5', 22.357, 1.219);
+					fx.addMarker('SND_NOTE_A6', 23.576, 0.955);
+					
+					fx.addMarker('SND_SUCCESS1', 24.532, 1.776);
+					fx.addMarker('SND_SUCCESS2', 26.308, 1.649);
+					fx.addMarker('SND_SUCCESS3', 27.957, 1.882);					
+					
+					fx.addMarker('SND_CARD_OPEN1', 29.839, 0.222);
+					fx.addMarker('SND_CARD_OPEN2', 30.060, 0.318);
+					fx.addMarker('SND_CARD_OPEN3', 30.378, 0.236);
+					
+					fx.addMarker('SND_CARD_CLOSE1', 30.615, 0.252);
+					fx.addMarker('SND_CARD_CLOSE2', 30.867, 0.227);
+					fx.addMarker('SND_CARD_CLOSE3', 31.093, 0.227);
+					
+					fx.addMarker('SND_LVL_SCENE_CHANGE1', 31.320, 1.380);
+					}
+					game.add.sprite(0, 0, 'PIC_BGD');
+					
+					game.input.onDown.add(onDown, this);
+					game.input.onUp.add(onUp, this);
+				//	game.input.onMove.add(onMove, this);
+					
+					disk = game.add.sprite(0,0,'PIC_SHIP',0);
+					disk.animations.add('engines',[0,1,2]);
+					disk.anchor.setTo(0.55,0.5);
+					disk.visible = false;
+					disk.inputEnabled = true;
+					disk.input.useHandCursor = true;
+					disk.input.start(0, true);
+					disk.events.onInputDown.add(onDiskDown, this);
+
+					
+					errorMarker = game.add.sprite(0,0,'PIC_ALL_ART','ErrorMarker0000');
+					errorMarker.visible = false;
+					errorMarker.anchor.setTo(0.5,0.5);
+					
+					placedSymbol = game.add.sprite(0,0,'PIC_ALL_ART','DiskPlacedSymbol0000');
+					placedSymbol.visible = false;
+					placedSymbol.animations.add('show',[1,2,3,4,5,6,7,8,9]);
+				//	placedSymbol.anchor.setTo(0.5,0.5);
+					placedSymbol.events.onAnimationComplete.add(onPlacedSymbolComplete, this)
+					
+					obstaclesCoords = [];
+					safeHome = game.add.sprite(0,0,'PIC_HOME',0);
+					safeHome.anchor.setTo(0.5,0.5);
+					safeHome.x = 533+318;
+					safeHome.y = 413+173;
+					safeHome.animations.add('light',[0,1,0]);
+					
+					
+					imgBMD = game.add.bitmapData(1000,750);
+					imgBMD.context.fillStyle = 'rgba(255, 0, 0, 0.3)';
+					
+					imgBMP = game.add.sprite(0,0,imgBMD);
+					
+					var expls1 = game.add.sprite(0,0,'PIC_DRAG1');
+					expls1.x = 66+180;
+					expls1.y = 63+90;					
+					
+					var expls2 = game.add.sprite(0,0,'PIC_DRAG2');
+					expls2.x = 660-33+92;
+					expls2.y = 630-47-132;						
+					
+					dangObj = game.add.sprite(0,0,'PIC_ASTEROIDS',0);
+					
+					dangObj.anchor.setTo(0.5,0.5);
+					dangObj.visible = false;					
+					
+					game.add.sprite(0, 668, 'PIC_CAPTION');
+					
+
+
+					var inf=new Infr(game);
+					inf.init(230, 75);
+					informers.push(inf);
+					
+					var inf=new Infr(game);
+					inf.init(450, 75);
+					informers.push(inf);
+					
+					var inf=new Infr(game);
+					inf.init(655, 75);
+					informers.push(inf);
+					
+					//fpsInformer = game.add.text(50,50,'FPS');
+					this.game.time.advancedTiming = true;
+					
+					preStartPage=new PreStartPage(game, startClick);
+					preStartPage.init("Avoid obstacles in the way as you move your object through a minefield back to its base. ");
+
+					scrScrn = new ScoreScreen(game, resetMinigame);
+					scrScrn.init();	
+					Init();
+				}
+					
+				function onDown(param1, param2) 
+				{
+				//	console.log('onDown');
+				//	console.log(param1);
+				//	console.log(param2);
+				}
+				function onUp(param1, param2) 
+				{
+				//	console.log('onUp');
+				//	console.log(param1);
+				//	console.log(param2);
+					if (gamePhase == 3) {
+						if (isDragging) {
+							isDragging = false;
+						}
+					}				
+				}
+				
+				function onMove(param1, param2) 
+				{
+				//	console.log('onMove');
+				//	console.log(param1);
+				//	console.log(param2);
+				}
+				
+				function onDiskDown(param1, param2) 
+				{
+				//	console.log('onDiskDown');
+				//	console.log(param1);
+				//	console.log(param2);
+					if ((gamePhase == 1)||(gamePhase == 2)) {
+					
+						setGamePhase(3);
+						isDragging = true;
+						var tw = game.add.tween(imgBMP);
+						tw.to({alpha:0},500);
+						tw.start();
+						
+					}
+					if (gamePhase == 3) {
+						isDragging = true;
+					}
+				}
+				
+				function onPlacedSymbolComplete() 
+				{
+					placedSymbol.visible = false;
+				}
+				
+				function onPhaseTimerComplete() 
+				{
+					setGamePhase(delayedPhase);
+				}
+				
+				function Init() {
+					//console.log('Init');
+
+					totScr=0;
+				
+					informers[0].reset(0,1,'memory',false,200, 130);					
+					informers[1].reset(7,1,'round',false,12, 130);
+					informers[2].reset(5,1,'errors',true,3, 130);					
+
+					playSound('SND_LVL_START1');
+					setGamePhase(0);
+					
+					preStartPage.show();
+				}
+				
+				function resetMinigame() {
+					//console.log('resetMinigame');
+					scrScrn.hide();
+					Init();
+				}
+				
+				
+				function onClick(item, pointer) {
+
+				}				
+				
+		
+				
+				function setGamePhase(ph) {
+					gamePhase=ph;
+					switch (ph){
+						case 0:{
+							obstaclesCoords = [];
+							imgBMD.clear();
+							roundNum = 0;
+							errorsNum = 0;
+							resetDisk();
+							
+							break;
+						}
+						case 1:{
+							roundNum++;
+						
+							setScore(1,roundNum);
+							initObstacles();
+							resetDisk();
+							showPlacedSymbol(disk.x, disk.y);
+							//SoundPlayer.PlayASoundID(SoundPlayer.SND_LVL_SCENE_CHANGE);
+							playSound('SND_LVL_SCENE_CHANGE1');
+							break;
+						}
+						case 2:{
+							resetDisk();
+							showPlacedSymbol(disk.x, disk.y);
+							break;
+						}						
+						case 3:{
+							break;
+						}						
+						case 4:{
+							break;
+						}
+					}
+				}
+				
+				function resetDisk() 
+				{
+					disk.x = 204;
+					disk.y = 230;
+					disk.visible = true;
+					
+					prevDiskX = disk.x;
+					prevDiskY = disk.y;
+					
+				//	placedSymbol.show(disk.x, disk.y, this);
+				}				
+				
+				function showPlacedSymbol(ax, ay)
+				{
+					placedSymbol.x = ax-47;
+					placedSymbol.y = ay-47;
+					placedSymbol.visible = true;
+					placedSymbol.animations.play('show',30);
+				}
+				
+
+				
+				// THE GAME IS GOING TO BE UPDATED
+				function update() {	
+				
+				//	console.log('update '+gamePhase);
+					if (gamePhase == 3) {
+						if (isDragging) {
+							disk.x = game.input.x;
+							disk.y = game.input.y;	
+							
+							var dx = disk.x - prevDiskX;
+							var dy = disk.y - prevDiskY;
+							
+							if ((dx!=0)||(dy!=0)){
+								disk.animations.play('engines');
+								var phi = Math.atan2(dy,dx);
+								disk.rotation = disk.rotation*0.9+phi*0.1;//-Math.PI/2;
+							}
+							
+							prevDiskX = disk.x;
+							prevDiskY = disk.y;
+							
+						//	hasMovedThisFrame = true;
+							if (isDiskInHome()) {
+								//trace('round complete', roundNum);
+								
+								var scr = 1 + Math.round((2 * roundNum + 1) / 4);
+								setScore(0,scr,true);
+								//SoundPlayer.PlayASoundID(SoundPlayer.);
+								playSound('SND_SUCCESS',3);
+								safeHome.animations.play('light',5, false);
+								setGamePhase(1);
+							}else {
+								if (isDiskHit()) {
+									errorsNum++;
+									setScore(2,errorsNum);
+								
+									showError();
+									imgBMP.alpha = 1;
+								//	SoundPlayer.PlayASoundID(SoundPlayer.SND_ERROR);
+									playSound('SND_ERROR',3);
+									if (errorsNum < 3) {
+										setGamePhase(2);//resetDisk
+										var tw = game.add.tween(imgBMP);
+										tw.to({alpha:0},1500);
+										tw.start();
+										
+										showPlacedSymbol(disk.x, disk.y);
+										isDragging = false;
+									}
+									else {
+									//	dispatchEvent(new ScoreEvent(ScoreEvent.GAME_END));
+										totScr = informers[0].score;
+										setGamePhase(4);
+										isDragging = false;
+										game.onScore.dispatch(totScr);
+										scrScrn.show(totScr);
+										playSound('SND_LEVEL_FINISHED1');
+									}
+								}
+							}
+						}
+					}
+	    		}
+				
+				function showError()
+				{
+					errorMarker.x = disk.x;
+					errorMarker.y = disk.y;
+					errorMarker.visible = true;
+					errorMarker.alpha = 1;
+					var tw = game.add.tween(errorMarker);
+					tw.to({alpha:0},1500);
+					tw.start();
+				}				
+			
+				function isDiskInHome()
+				{
+					return isDistBetweenPtsSmallerThan(disk.x, disk.y, 878, 625, 75);
+				}
+				
+				function isDiskHit() 
+				{
+					var b = false;
+					var len = obstaclesCoords.length;
+					
+					if ((disk.x - 18 <= 36) || (disk.y - 18 <= 25) || (disk.x + 18 >= 972) || (disk.y + 18 >= 725)) {
+						b = true;				
+					}
+
+					if (!b) {
+						for (var i = 0; i < len; i += 2) {
+							var ox = obstaclesCoords[i];
+							var oy = obstaclesCoords[i + 1];
+							var dx = disk.x - ox;
+							var dy = disk.y - oy;
+							if (isDistBetweenPtsSmallerThan(ox,oy,disk.x, disk.y,42)){
+							//if ((dx > -10) && (dx < 70 + 10) && (dy > -10) && (dy < 70 + 10)) {
+								b = true;
+								break;
+							}
+						}
+					}
+					return b;
+				}				
+				
+				function initObstacles() 
+				{
+					var minDist = 45;
+					var obsNum = roundNum;
+					var triesNum = 0;
+					var need1More = true;
+					obstaclesCoords = [];
+					
+					imgBMD.clear();
+			
+					for (var i = 0; i < obsNum; i++) {
+						triesNum = 0;
+						need1More = true;
+						while (need1More&&(triesNum<10)) {
+							var rx = randomNumberFromTo(160, 860);
+							var ry = randomNumberFromTo(210, 614);
+							need1More = false;
+							
+							if ((rx < 340) && (ry < 310)) {
+								need1More = true;
+							}
+							
+							if ((rx>730) && (ry > 500)) {
+								need1More = true;
+							}
+							
+							var len = obstaclesCoords.length;
+							for (var j = 0; j < len; j += 2) {
+								var tx = obstaclesCoords[j];
+								var ty = obstaclesCoords[j + 1];
+								if (isDistBetweenPtsSmallerThan(tx,ty,rx,ry,70+minDist)){
+								//if ((Math.abs(tx - rx) <= 70 + minDist) && (Math.abs(ty - ry) <= 70 + minDist)) {
+									need1More = true;
+									triesNum++;
+								}
+							}
+						}
+						if (triesNum < 10) {
+							obstaclesCoords.push(rx, ry);
+							//console.log(imgBMD);
+						//	imgBMD.draw(dangObj,rx,ry);
+						//	imgBMD.ctx.fillRect(rx-35, ry-35, 70, 70);
+							dangObj.cacheAsBitmap = true;
+							dangObj.frame = Math.floor(Math.random()*5);
+							imgBMD.draw(dangObj,rx-50, ry-45);
+						}
+					}
+					imgBMP.alpha = 1;
+				}				
+				
+				function randomNumberFromTo(mn,mx){
+					return Math.floor(mn+(mx-mn)*Math.random());
+				}			
+				
+				function isDistBetweenPtsSmallerThan(x1,y1,x2,y2,threshold){
+					var dx = Math.abs(x2 - x1);
+					var dy = Math.abs(y2 - y1);
+					var trSQR = threshold * threshold;
+					if (dx > threshold) { return false }
+					if (dy > threshold) { return false }
+					if ((dx<threshold*0.7)&&(dy<threshold*0.7)){return true}
+					return (dx * dx + dy * dy < trSQR);					
+				}
+				
+				function render() {
+					//fpsInformer.setText("FPS: " + this.game.time.fps);
+	    		}
+
+				
+				function startClick(button) {
+					preStartPage.hide();
+					playSound('SND_BTN_DOWN',3);
+					setGamePhase(1);				
+				}
+				
+				function playSound(pref,vars) {
+					//console.log('playSound '+pref);
+					//console.log(vars);
+
+					if (vars){
+						var r=1;
+						if (vars>1){
+							r = Math.floor(Math.random()*vars)+1;
+						}	
+						fx.play(pref+r);
+					}
+					else{
+						fx.play(pref)
+					}					
+				}	
+				
+				function setScore(infId, scr, add)
+				{
+					//console.log('setScrore '+scr+' '+infId+' '+add);
+					if (add){
+						informers[infId].addScore(scr);
+					}
+					else{
+						informers[infId].showScore(scr);
+					}
+				}
+				
+				game.on('score', function() {
+					console.log('@@@@@@@@@@@@@@@@on score', arguments);
+				});				
+				
+				
+	    		};
+		</script>
+    </head>
+    <body>
+    </body>
+</html>
+
+
+
+
+

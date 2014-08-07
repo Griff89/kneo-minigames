@@ -1,0 +1,644 @@
+<!doctype html>
+<html>
+	<head>
+    		<script src="js/phaser.min.js"></script>
+			<script src="js/Routines.js"></script>
+    		<script src="js/Infr.js"></script>
+			<script src="js/ScoreScreen.js"></script>
+			<script src="js/GeomTaskView.js"></script>
+			<script src="js/GeomShape.js"></script>
+			<script src="js/PreStartPage.js"></script>
+
+    		<style>
+    			body{margin:0}
+    		</style>
+    		<script type="text/javascript">
+			window.onload = function() {
+				// here we define a new 640x480 game, with three core functions:
+				// onPreload to be executed when the game preloads
+				// onCreate to be executed once the game is firstly created
+				// onUpdate to be called every time the game us updated
+				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '', {preload: preload, create: create, update: update, render:render});
+				game.onScore = new Phaser.Signal();
+				game.on = function(event, listener) {
+					event = event.charAt(0).toUpperCase() + event.slice(1);
+					if(game.hasOwnProperty('on' + event)) {
+						console.log('has property');
+						game['on' + event].add(listener);
+					} else {
+						console.log('do not have- on' + event)
+					}
+				};	
+				
+				window.game = game;
+				
+				
+				var preloadProgress = null;
+				var preloadText = null;
+				function preload() {
+					preloadProgress = game.add.group();
+					
+					preloadText = game.add.text(10,10,'Loading',{fill:"#ffffff"});
+					preloadProgress.add(preloadText);
+				
+					game.load.image('PIC_BGD', 'assets/kneo_assets/background1000x750.png');
+					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
+					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+					
+					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
+					
+					
+					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);		
+					
+					game.load.image('PIC_FIND_CAP', 'assets/kneo_assets/find1.png');
+					game.load.spritesheet('PIC_FONT_48', 'assets/kneo_assets/font_48px.png', 63, 52);
+					game.load.spritesheet('PIC_FONT_NUM', 'assets/kneo_assets/font_numbers.png', 96, 77);
+					game.load.spritesheet('PIC_ICONS', 'assets/kneo_assets/ikona_czapka1.png', 164, 131);
+					game.load.image('PIC_TITLE', 'assets/kneo_assets/shape_expert_title1.png');
+					
+					game.load.spritesheet('PIC_SHAPES', 'assets/kneo_assets/shapes.png', 220, 220);
+					game.load.spritesheet('PIC_RESULTS', 'assets/kneo_assets/guess_results.png', 77, 78);
+					
+					game.load.bitmapFont('simple_blue', 'assets/fonts/simple_blue.png', 'assets/fonts/simple_blue.fnt');
+                    game.load.bitmapFont('red', 'assets/fonts/red.png', 'assets/fonts/red.fnt');
+                    game.load.bitmapFont('font30', 'assets/fonts/font30.png', 'assets/fonts/font30.fnt');
+
+					
+					
+					game.load.spritesheet('PIC_GENRE_ICONS', 'assets/GenreSideSymbol.png', 'assets/GenreSideSymbol.json');
+					
+					
+					game.load.atlasJSONArray('PIC_GENRE_ICONS', 'assets/GenreSideSymbol.png', 'assets/GenreSideSymbol.json');
+				//	game.load.atlasXML('PIC_GENRE_ICONS', 'assets/GenreSideSymbol.png', 'assets/GenreSideSymbol.xml');
+					game.load.spritesheet('PIC_SCORE_FLAG', 'assets/ScoreFlag.png', 54,147);					
+					game.load.atlasJSONArray('PIC_ALL_ART', 'assets/art.png', 'assets/art.json');
+					
+					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
+					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');					
+					
+					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');	
+				}
+				
+				var shapes = [];//:Array;
+		
+				var taskView = null;//:GeomTaskView;
+				
+				var taskPhase = 0;//:int;
+				
+				var hidingTimer = null;//:Timer;
+				var hidingId = 0;//:int;
+				var totalUsedShapes = [];//:Array;
+				var totalUsedColors = [];//:Array;
+				
+				var isReacting2Clicks = false;//:Boolean;
+				
+				var delayBeforeTaskTimer = null;//:Timer;
+				
+				var tm0 = 0;//:int;
+				
+				var tmPassed = 0;
+				var errors = 0;
+				
+				var totScr=0;
+				
+				var informers=[];
+				var preStartPage = null;
+				
+				var scrScrn = null;
+				
+				
+				//var fpsInformer;
+				var fx;				
+				// THE GAME HAS BEEN CREATED
+				function create() {
+
+					//Sounds init
+					{
+					fx = game.add.audio('sfx');
+					fx.override = true;//??? зачем это?
+					fx.addMarker('SND_QUESTION1', 0, 0.39);
+					fx.addMarker('SND_QUESTION2', 0.42, 0.39);
+					fx.addMarker('SND_QUESTION3', 0.85, 0.39);
+					fx.addMarker('SND_QUESTION4', 1.272, 0.349);
+					fx.addMarker('SND_POP1', 1.666, 0.079);
+					fx.addMarker('SND_POP2', 1.798, 0.075);
+					fx.addMarker('SND_POP3', 1.886, 0.046);
+					fx.addMarker('SND_LVL_START1', 1.931, 3.469);
+					fx.addMarker('SND_LEVEL_FINISHED1', 5.4, 4.582);
+					fx.addMarker('SND_ERROR1', 9.982, 0.836);
+					fx.addMarker('SND_ERROR2', 10.819, 1.033);
+					fx.addMarker('SND_ERROR3', 11.852, 0.738);
+					fx.addMarker('SND_DIAL_NUM_00', 12.590, 0.287);
+					fx.addMarker('SND_DIAL_NUM_01', 12.877, 0.287);
+					fx.addMarker('SND_DIAL_NUM_02', 13.184, 0.294);
+					fx.addMarker('SND_DIAL_NUM_03', 13.478, 0.287);
+					fx.addMarker('SND_DIAL_NUM_04', 13.766, 0.287);
+					fx.addMarker('SND_DIAL_NUM_05', 14.054, 0.287);
+					fx.addMarker('SND_DIAL_NUM_06', 14.340, 0.287);
+					fx.addMarker('SND_DIAL_NUM_07', 14.627, 0.313);
+					fx.addMarker('SND_DIAL_NUM_08', 14.941, 0.287);
+					fx.addMarker('SND_DIAL_NUM_09', 15.228, 0.287);
+					fx.addMarker('SND_BTN_DOWN1', 15.516, 0.102);
+					fx.addMarker('SND_BTN_DOWN2', 15.668, 0.096);
+					fx.addMarker('SND_BTN_DOWN3', 15.814, 0.134);
+					
+					fx.addMarker('SND_NOTE_A0', 15.998, 1.326);
+					fx.addMarker('SND_NOTE_A1', 17.424, 1.290);
+					fx.addMarker('SND_NOTE_A2', 18.714, 1.255);
+					fx.addMarker('SND_NOTE_A3', 19.969, 1.219);
+					fx.addMarker('SND_NOTE_A4', 21.188, 1.169);
+					fx.addMarker('SND_NOTE_A5', 22.357, 1.219);
+					fx.addMarker('SND_NOTE_A6', 23.576, 0.955);
+					
+					fx.addMarker('SND_SUCCESS1', 24.532, 1.776);
+					fx.addMarker('SND_SUCCESS2', 26.308, 1.649);
+					fx.addMarker('SND_SUCCESS3', 27.957, 1.882);					
+					
+					fx.addMarker('SND_CARD_OPEN1', 29.839, 0.222);
+					fx.addMarker('SND_CARD_OPEN2', 30.060, 0.318);
+					fx.addMarker('SND_CARD_OPEN3', 30.378, 0.236);
+					
+					fx.addMarker('SND_CARD_CLOSE1', 30.615, 0.252);
+					fx.addMarker('SND_CARD_CLOSE2', 30.867, 0.227);
+					fx.addMarker('SND_CARD_CLOSE3', 31.093, 0.227);
+					
+					fx.addMarker('SND_LVL_SCENE_CHANGE1', 31.320, 1.380);
+					
+					fx.addMarker('SND_PREC_RES_01', 32.700, 0.499);
+					fx.addMarker('SND_PREC_RES_02', 33.199, 0.529);
+					fx.addMarker('SND_PREC_RES_03', 33.727, 0.560);
+					fx.addMarker('SND_PREC_RES_04', 34.287, 0.422);
+					fx.addMarker('SND_PREC_RES_05', 34.710, 0.447);
+					fx.addMarker('SND_PREC_RES_06', 35.157, 0.474);
+					fx.addMarker('SND_PREC_RES_07', 35.630, 0.307);
+					fx.addMarker('SND_PREC_RES_08', 35.937, 0.325);
+					
+					fx.addMarker('SND_EXCLAMATION1', 36.262, 0.583);
+					fx.addMarker('SND_EXCLAMATION2', 36.845, 0.436);
+					fx.addMarker('SND_EXCLAMATION3', 37.281, 0.490);
+					fx.addMarker('SND_EXCLAMATION4', 37.771, 0.550);
+					
+					fx.addMarker('SND_TICK1', 38.321, 0.326);
+					fx.addMarker('SND_TICK2', 38.647, 0.302);
+					fx.addMarker('SND_TICK3', 38.949, 0.312);
+
+					}
+					game.add.sprite(0, 0, 'PIC_BGD');
+					game.add.sprite(342, 38, 'PIC_TITLE');
+					game.add.sprite(316, 613, 'PIC_FIND_CAP');
+					
+					game.add.sprite(98,230,'PIC_ICONS',5).anchor.setTo(0.5, 0.5);
+					game.add.sprite(98,528,'PIC_ICONS',6).anchor.setTo(0.5, 0.5);
+					game.add.sprite(900,230,'PIC_ICONS',3).anchor.setTo(0.5, 0.5);
+					game.add.sprite(900,528,'PIC_ICONS',4).anchor.setTo(0.5, 0.5);
+					//console.log('create');
+					//lvlCap = game.add.text(320, 40, 'Shapes expert',{fill:"#482f11", font:"36px Arial", align: "center"});
+						
+					
+					
+					delayBeforeTaskTimer = game.time.create(false);//new Timer(2000, 1);
+					//delayBeforeTaskTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onDelayBeforeTaskComplete);
+					shapes = new Array();
+					for (var i = 0; i < 4; i++ ) {
+						for (var j = 0; j < 3; j++ ) {
+							var shp = new GeomShape(game, onItemUncoveredCorrect);
+							shp.init();
+							shapes.push(shp);
+							shp.bgd.inputEnabled = true;
+							shp.bgd.input.start(0, true);
+							shp.bgd.events.onInputDown.add(onMouseDown, this);
+						}
+					}
+					
+					
+					
+					taskView = new GeomTaskView(game);
+					taskView.init();
+					
+					for (var i = 0; i < taskView.shapesNum; i++) {
+						totalUsedShapes.push(0);
+					}
+					for (i = 0; i < taskView.colorsNum; i++) {
+						totalUsedColors.push(0);
+					}
+					
+					hidingId = 0;
+					hidingTimer = game.time.create(false);//new Timer(100, shapes.length+4);
+					//hidingTimer.addEventListener(TimerEvent.TIMER, hideShapes);
+					//hidingTimer.addEventListener(TimerEvent.TIMER_COMPLETE, hideComplete);					
+					
+				//	game.input.onDown.add(onDown, this);
+			
+
+					
+					
+					var inf=new Infr(game, playSound);
+					inf.init(115, 320);
+					informers.push(inf);
+					
+					var inf=new Infr(game, playSound);
+					inf.init(115, 620);
+					informers.push(inf);
+					
+					var inf=new Infr(game, playSound);
+					inf.init(920, 320);
+					informers.push(inf);
+					
+					var inf=new Infr(game, playSound);
+					inf.init(920, 620);
+					informers.push(inf);	
+					
+					preStartPage=new PreStartPage(game, startClick);
+					preStartPage.init("Find the shapes you'll be asked");
+					
+					
+					
+					scrScrn = new ScoreScreen(game, resetMinigame);
+					scrScrn.init();
+					
+					
+					
+
+					
+					Init();
+					//fpsInformer = game.add.text(50,50,'FPS');
+					this.game.time.advancedTiming = true;					
+				}
+				
+				function onDelayBeforeTaskComplete()
+				{
+					showTask();
+				}
+				
+				function onItemUncoveredCorrect()
+				{
+					prepare2ShowTask();
+				}
+				
+				function prepare2ShowTask()
+				{
+					delayBeforeTaskTimer.stop();
+					delayBeforeTaskTimer.add(2000,onDelayBeforeTaskComplete, this);
+					delayBeforeTaskTimer.start();
+				}
+				
+				function hideComplete()
+				{
+					//снова показываем задание
+					showTask();
+					taskView.hidePhaseFrame();
+				}
+				
+				function hideShapes()
+				{
+					if (hidingId < shapes.length) {
+						var shp = shapes[hidingId];// as GeomShape;
+						shp.showCover();
+						//SoundPlayer.PlayASoundID(SoundPlayer.SND_DRAG);
+						hidingId++;			
+					}
+				}
+				
+				function Init() {
+					informers[0].reset(1,1,'attention',false,200, 130);					
+					informers[1].reset(0,1,'memory',false,200, 130);
+					informers[2].isTime = true;
+					informers[2].reset(4,1,'time',true,10000, 130);					
+					informers[3].reset(5,1,'errors',false,7, 130);					
+
+					
+					
+					playSound('SND_LVL_START1');
+					
+					preStartPage.show();
+				
+				
+					delayBeforeTaskTimer.stop();
+					
+					var sSh = 0;
+					for (var i = 0; i < taskView.shapesNum; i++) {
+						totalUsedShapes[i] = Math.ceil(shapes.length / taskView.shapesNum);
+						sSh += totalUsedShapes[i];
+					}
+					
+					
+					var sCl = 0;
+					for (i = 0; i < taskView.colorsNum; i++) {
+						totalUsedColors[i] = Math.ceil(shapes.length / taskView.colorsNum);
+						sCl += totalUsedColors[i];
+					}
+					
+					
+					for (var i = 0; i < 4; i++ ) {
+						for (var j = 0; j < 3; j++ ) {
+
+							
+							var shp = shapes[3 * i + j];// as GeomShape;
+							
+							
+						
+							shp.resetShapeAndColor(0,0);
+							shp.content.x = 290 + 130 * i;
+							shp.content.y = 185 + 130 * j;
+						}
+					}
+					
+				//	for (var i=0; i<shapes.length; i++){
+				//		console.log(shapes[i].shapeId+' '+shapes[i].colorId);
+				//		
+				//		console.log(shapes[i].bgd.frame);
+				//	}
+					
+					//taskView.showPhaseFrame(1);
+					taskView.showPhrase('Wait for the task');
+					
+				//	showTask();
+				//	resetHidingTimer();
+					errors = 0;
+					tmPassed = 0;
+				
+				}
+				
+				function onTimeStarted() {
+					taskPhase = 0;
+					showTask();
+					taskView.hidePhaseFrame();
+				}
+				
+				function resetHidingTimer()
+				{
+					hidingId = 0;
+					hidingTimer.stop();
+					hidingTimer.repeat(100,shapes.length+4,hideShapes,this);
+					hidingTimer.add(100*(shapes.length+4),hideComplete,this);
+					hidingTimer.start();
+					//message about mode change
+					
+					playSound('SND_LVL_SCENE_CHANGE1');
+					taskView.showPhrase("Let's test your\nmemory now!");
+				}
+				
+				function showTask() 
+				{			
+					var nonHitNum = 0;
+					var len = shapes.length;
+					
+					for (var i=0; i<len; i++){
+						var shp = shapes[i];
+						if (!shp.isHit) {						
+							nonHitNum++;
+					
+						}
+					}
+					
+					if (taskPhase >= 10) {
+						// all compete
+						taskView.showPhrase('Test complete!');
+						//dispatchEvent(new ScoreEvent(ScoreEvent.GAME_END));
+						totScr = informers[0].score+informers[1].score;
+						game.onScore.dispatch(totScr);
+						scrScrn.show(totScr);
+						playSound('SND_LEVEL_FINISHED1');
+						return;
+					}
+					
+					if (nonHitNum < 1) {//
+						// exit
+						taskView.showPhrase('Too few shapes left.\nEnd.');
+						//dispatchEvent(new ScoreEvent(ScoreEvent.GAME_END));
+						totScr = informers[0].score+informers[1].score;
+						scrScrn.show(totScr);
+						playSound('SND_LEVEL_FINISHED1');
+						return;
+					}
+					
+
+					
+					
+					var r = Math.floor(Math.random() * len);
+					
+					while (shapes[r].isHit) {
+						r++;
+						r %= len;
+					}
+					taskView.resetTask(taskPhase, shapes[r]);
+					
+					
+					var need1More = true;
+					while (need1More) {
+						taskView.resetTask(taskPhase);
+						need1More = true;
+						
+						for (i=0; i<len; i++) {
+							shp = shapes[i];
+							if (!shp.isHit) {
+								if (doesShapeFitReqs(shp)) {
+									need1More = false;
+									
+									break;
+								}
+								else {
+									
+								}						
+							}
+						}
+					}
+					
+					isReacting2Clicks = true;
+					
+					playSound('SND_QUESTION',3);
+					tm0 = Date.now();
+				}
+				
+				function doesShapeFitReqs(shp) {
+					var b = false;
+					if ((shp.colorId == taskView.colorId) || (taskView.colorId == 0)) {
+						if ((shp.shapeId == taskView.shapeId) || (taskView.shapeId == 0)) {
+							b = true;
+						}
+					}
+					return b;
+				}
+						
+				
+				function onMouseDown(item, pointer)
+				{
+					if (isReacting2Clicks) {
+						
+						//if (e.target is GeomShape) {					
+						isReacting2Clicks = false;
+						var gs = item.owner;//:GeomShape = e.target as GeomShape;
+						if (!gs.isHit){
+							if (doesShapeFitReqs(gs)) {
+								
+								if (!gs.isCovered) {
+									gs.getHit();
+									taskView.showCorrect();
+								}
+								else {
+									gs.uncoverAndHit();
+									taskView.showCorrect();
+								}
+						
+								playSound('SND_EXCLAMATION',4);
+								var tm = Date.now() - tm0;
+							//	trace('time:', tm);
+								
+								if (taskPhase < 5) {
+									var scr = Routines.prototype.calcFindShapeScore(tm);
+									setScore(0,scr,true);
+									
+								}
+								else {
+									scr = Routines.prototype.calcFindShapeScore(tm);
+									setScore(1,scr,true);
+								}
+								
+								taskPhase++;
+								if (taskPhase < 5) {
+									prepare2ShowTask()
+								}
+								else {
+									if (taskPhase == 5) {
+										resetHidingTimer();
+									}
+								}
+								
+							}
+							else {
+								
+								if (!gs.isCovered) {
+									gs.showWrong();	
+									isReacting2Clicks = true;
+								}
+								else {
+									gs.uncoverAndWrong();
+									isReacting2Clicks = true;
+								}
+							
+								playSound('SND_ERROR',3);
+								errors++;
+							
+								setScore(3,errors);
+								
+							}
+						}				
+					}
+				}
+				
+
+				
+				function onFrame() 
+				{
+					if (isReacting2Clicks) {
+						//var prevTm:int = tmPassed;
+						tmPassed = Date.now() - tm0;
+					
+						setScore(2,tmPassed);
+					}
+				}
+
+				
+				function resetMinigame() {
+					
+					scrScrn.hide();
+					Init();
+				}
+				
+				
+				function onClick(item, pointer) {
+
+				}				
+
+				
+				function mashAr(ar) 
+				{
+					var len = ar.length;
+					for (var i = 0; i < len; i++) {
+						var n = i + Math.floor(Math.random() * (len - i));
+						var t = ar[n];
+						ar[n] = ar[i];
+						ar[i] = t;
+					}
+				}
+				
+				// THE GAME IS GOING TO BE UPDATED
+				function update() {
+				
+					onFrame();
+	    		}
+				
+				function getDistanceBetween(x1,y1,x2,y2){
+					return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+				}	
+				
+				function randomNumberFromTo(mn,mx){
+					return Math.floor(mn+(mx-mn)*Math.random());
+				}			
+				
+				function isDistBetweenPtsSmallerThan(x1,y1,x2,y2,threshold){
+					var dx = Math.abs(x2 - x1);
+					var dy = Math.abs(y2 - y1);
+					var trSQR = threshold * threshold;
+					if (dx > threshold) { return false }
+					if (dy > threshold) { return false }
+					if ((dx<threshold*0.7)&&(dy<threshold*0.7)){return true}
+					return (dx * dx + dy * dy < trSQR);					
+				}
+				
+				function render() {
+					//fpsInformer.setText("FPS: " + this.game.time.fps);
+	    		}
+				
+				
+				
+				function startClick(button) {
+					preStartPage.hide();
+					playSound('SND_BTN_DOWN',3);
+
+					onTimeStarted();
+				}
+				
+				function playSound(pref,vars) {
+					//console.log('playSound '+pref);
+					//console.log(vars);
+
+					if (vars){
+						var r=1;
+						if (vars>1){
+							r = Math.floor(Math.random()*vars)+1;
+						}	
+						fx.play(pref+r);
+					}
+					else{
+						fx.play(pref)
+					}					
+				}	
+				
+				function setScore(infId, scr, add)
+				{
+					if (add){
+						informers[infId].addScore(scr);
+					}
+					else{
+						informers[infId].showScore(scr);
+					}
+				}
+				
+				game.on('score', function() {
+					console.log('@@@@@@@@@@@@@@@@on score', arguments);
+				});				
+				
+				
+	    		};
+		</script>
+    </head>
+    <body>
+    </body>
+</html>
+
+
+
+
+
