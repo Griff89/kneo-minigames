@@ -31,7 +31,7 @@ ShapeWithPoints.prototype = {
 	init: function () {
 		this.content = this.game.add.group();
 		
-		this.nmTxt=this.game.add.bitmapText (1000, 390, 'PIC_FONT2', '0', 28);
+		this.nmTxt=this.game.add.bitmapText (500, 390, 'PIC_FONT2', '0', 28);
         this.nmTxt.align = 'center';
         this.nmTxt.pivot.x = (this.nmTxt.textWidth / 2);
         this.nmTxt.pivot.y = (this.nmTxt.textHeight / 2);
@@ -52,6 +52,7 @@ ShapeWithPoints.prototype = {
 		//this.inf.anchor.setTo(0.5,0.5);
 	},
 	initShape: function (tpId, func, ctx) {
+		//console.log('initShape');
 		this.clear();
 		
 		var rad = 230;
@@ -59,6 +60,7 @@ ShapeWithPoints.prototype = {
 		var x0 = 500;
 		var y0 = 400;
 		var ptsNum;
+		
 		switch (tpId) {//triangle, square, rectangle, hexagon, star
 			case 1: {
 				ptsNum = 3;
@@ -86,6 +88,7 @@ ShapeWithPoints.prototype = {
 				break;
 			}
 		}
+		
 		this.nmTxt.text = this.nm;
 		var i = 0;
 		while (i < ptsNum) {
@@ -109,7 +112,7 @@ ShapeWithPoints.prototype = {
 			this.pts.push(pt);
 			i++;
 		}
-		
+	
 		var len = this.pts.length;
 		var lastPt = this.pts[len - 1];
 		this.ansPt = new ShapePoint(this.game);
@@ -138,7 +141,7 @@ ShapeWithPoints.prototype = {
 			var rPhi = Math.random() * Math.PI * 2;
 			var nx = lastPt.sprite.x + rr * Math.sin(rPhi);
 			var ny = lastPt.sprite.y - rr * Math.cos(rPhi);
-			need1More =  ((nx < 79) || (ny < 72) || (nx > 562) || (ny > 435));
+			need1More =  ((nx < 160) || (ny < 98) || (nx > 818) || (ny > 550));
 		}
 		
 		lastPt.sprite.x = nx;
@@ -157,19 +160,22 @@ ShapeWithPoints.prototype = {
 			this.content.add(this.pts[i].sprite);
 		//addChild(pt);
 		}		
-	
+		
 	},
 	onTwnComplete: function () {
+		//console.log('onTwnComplete');
 		this.correctCallBack();
 	},
 	startDraggingPoint: function (pt) 
 	{
+		//console.log('startDraggingPoint');
 		this.draggedPoint = pt;
 	
 	},
 	
 	checkDraggedPointPosition: function ()
 	{
+		//console.log('checkDraggedPointPosition');
 		//inf = new AccuracyInformer
 		var dist = Routines.prototype.GetDistanceBetween(this.ansPt.sprite.x, this.ansPt.sprite.y, 
 								this.draggedPoint.sprite.x, this.draggedPoint.sprite.y);
@@ -183,6 +189,7 @@ ShapeWithPoints.prototype = {
 	},
 	
 	showInformerScore: function (ax, ay, dist) {
+		//console.log('showInformerScore');
 		var res = 0;
 		var str = ' ';
 		this.inf.x = ax;
@@ -229,7 +236,7 @@ ShapeWithPoints.prototype = {
 	
 	handleDragging: function (ax, ay) 
 	{
-		
+		//console.log('handleDragging');
 		if (this.draggedPoint) {
 			this.draggedPoint.sprite.x = ax;
 			this.draggedPoint.sprite.y = ay;
@@ -239,6 +246,7 @@ ShapeWithPoints.prototype = {
 	
 	showCorrect: function () 
 	{
+		//console.log('showCorrect');
 		this.ansEdg1.sprite.alpha = 0;
 		this.ansEdg1.visible = true;
 		this.content.add(this.ansEdg1.sprite);
@@ -264,6 +272,7 @@ ShapeWithPoints.prototype = {
 	
 	clear: function () 
 	{
+		//console.log('clear');
 		this.draggedPoint = null;
 		
 		if (this.ansPt) {
@@ -287,6 +296,7 @@ ShapeWithPoints.prototype = {
 		
 		this.pts = [];
 		this.edgs = [];
+		//console.log('clearOK');
 	},
 	f3: function () {
 	
