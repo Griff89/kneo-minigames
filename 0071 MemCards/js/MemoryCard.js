@@ -69,6 +69,12 @@ MemoryCard.prototype = {
 		}
 	},
 	setCoordsAndScale: function (ax,ay,scl) {
+		if (this.twn1)(this.twn1.stop())
+		if (this.twn2)(this.twn2.stop())
+		if (this.openTwn)(this.openTwn.stop())
+		if (this.closeTwn)(this.closeTwn.stop())
+		if (this.correctTwn)(this.correctTwn.stop())		
+		
 		this.content.scale.set(scl, scl);
 		this.content.x = ax;
 		this.content.y = ay;
