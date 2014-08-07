@@ -1,3 +1,3 @@
 kneo-minigames
 ==============
-All right reserved
+All right reserved by http://kneoworld.com
