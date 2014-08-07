@@ -1,0 +1,577 @@
+<!doctype html>
+<html>
+	<head>
+    		<script src="js/phaser.min.js"></script>
+			<script src="js/Routines.js"></script>
+    		<script src="js/Infr.js"></script>
+			<script src="js/ScoreScreen.js"></script>
+			<script src="js/PreStartPage.js"></script>
+
+    		<style>
+    			body{margin:0}
+    		</style>
+    		<script type="text/javascript">
+			window.onload = function() {
+				// here we define a new 640x480 game, with three core functions:
+				// onPreload to be executed when the game preloads
+				// onCreate to be executed once the game is firstly created
+				// onUpdate to be called every time the game us updated
+				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '', {preload: preload, create: create, update: update, render:render});
+				game.onScore = new Phaser.Signal();
+				game.on = function(event, listener) {
+					event = event.charAt(0).toUpperCase() + event.slice(1);
+					if(game.hasOwnProperty('on' + event)) {
+						console.log('has property');
+						game['on' + event].add(listener);
+					} else {
+						console.log('do not have- on' + event)
+					}
+				};	
+				
+				window.game = game;
+				
+				
+				var preloadProgress = null;
+				var preloadText = null;
+				function preload() {
+					preloadProgress = game.add.group();
+					
+					preloadText = game.add.text(10,10,'Loading',{fill:"#ffffff"});
+					preloadProgress.add(preloadText);
+					
+				
+					game.load.image('PIC_BGD', 'assets/kneo_assets/bg.png');
+					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
+					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+					
+					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
+					game.load.bitmapFont('PIC_FONT2', 'assets/fonts/project2.png', 'assets/fonts/project2.fnt');
+					
+					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);		
+					
+					
+					
+					game.load.image('PIC_MOSAIC_BGD1', 'assets/kneo_assets/triangle_bottom.png');
+					game.load.image('PIC_MOSAIC_BGD2', 'assets/kneo_assets/star_bottom.png');
+					game.load.image('PIC_MOSAIC_BGD3', 'assets/kneo_assets/hexagon_bottom.png');
+					game.load.spritesheet('PIC_MOSAIC_ELEMENTS1', 'assets/kneo_assets/mosaic_parts1.png', 320, 320);
+					game.load.spritesheet('PIC_MOSAIC_ELEMENTS2', 'assets/kneo_assets/mosaic_parts2.png', 320, 320);
+					game.load.spritesheet('PIC_MOSAIC_ELEMENTS3', 'assets/kneo_assets/mosaic_parts3.png', 320, 320);
+					game.load.image('PIC_MOSAIC_READY1', 'assets/kneo_assets/triangle.png');
+					game.load.image('PIC_MOSAIC_READY2', 'assets/kneo_assets/star.png');
+					game.load.image('PIC_MOSAIC_READY3', 'assets/kneo_assets/hexagon.png');					
+					
+					game.load.image('PIC_MOSAIC_LIGHT1', 'assets/kneo_assets/triangle_lght.png');
+					game.load.image('PIC_MOSAIC_LIGHT2', 'assets/kneo_assets/star_lght.png');
+					game.load.image('PIC_MOSAIC_LIGHT3', 'assets/kneo_assets/hexagon_lght.png');
+					
+
+					
+					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
+					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');					
+					
+					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');	
+				}				
+				
+				
+				
+				var elements = [];
+				var allCorPos = [				
+					[231, 183,
+					338, -36,
+					443, 197,
+					156, 331,
+					347, 81 ,
+					338, 321,
+					541, 353 ],				
+								
+					[186, 153,
+					368, 25 ,
+					533, 140,
+					295, 349,
+					276, 191,
+					413, 223,
+					473, 354],	
+					
+					[253 ,-52,
+					445 ,-26,
+					500 ,181,
+					169 ,103,
+					344 ,86 ,
+					344 ,252,
+					219 ,260]];				
+				var corPos = null;				
+				var initPos = null;				
+				var allInitPos = [				
+					[134, -34,
+					720, 240,
+					-9 ,-67 ,
+					626, 89 ,
+					-42, 97 ,
+					539, -83,
+					-51, 320],
+					[207, -79 ,
+					718, -16 ,
+					531, -73 ,
+					4, 8,
+					51, 347 ,
+					691, 349 ,
+					-65, 255],
+					[701, 176,
+					718, 373,
+					549, 416,
+					-30, -63,
+					-47, 235,
+					635, -42,
+					50 ,406]];
+		
+				var allOrigPos=[
+					215-36,53-57,
+					215-36,53-57,
+					215-36,53-57
+					];
+					
+				var figureId = 0;	
+				
+				var bgdGrp = null;
+				
+				var mosaicBGD = null;
+				var original = null;
+				var originalLight = null;
+				
+				var twn1 = null;
+				var twn2 = null;
+				var twn3 = null;
+				
+				var draggedElement = null;
+				var draggedDx = 0;
+				var draggedDy = 0;
+				
+				var totScr=0;
+				
+				var informers=[];
+				var preStartPage = null;
+				
+				var scrScrn = null;
+				
+				
+				//var fpsInformer;
+				var fx;				
+				// THE GAME HAS BEEN CREATED
+				function create() {
+
+					//Sounds init
+					{
+					fx = game.add.audio('sfx');
+					fx.override = true;//??? зачем это?
+					fx.addMarker('SND_QUESTION1', 0, 0.39);
+					fx.addMarker('SND_QUESTION2', 0.42, 0.39);
+					fx.addMarker('SND_QUESTION3', 0.85, 0.39);
+					fx.addMarker('SND_QUESTION4', 1.272, 0.349);
+					fx.addMarker('SND_POP1', 1.666, 0.079);
+					fx.addMarker('SND_POP2', 1.798, 0.075);
+					fx.addMarker('SND_POP3', 1.886, 0.046);
+					fx.addMarker('SND_LVL_START1', 1.931, 3.469);
+					fx.addMarker('SND_LEVEL_FINISHED1', 5.4, 4.582);
+					fx.addMarker('SND_ERROR1', 9.982, 0.836);
+					fx.addMarker('SND_ERROR2', 10.819, 1.033);
+					fx.addMarker('SND_ERROR3', 11.852, 0.738);
+					fx.addMarker('SND_DIAL_NUM_00', 12.590, 0.287);
+					fx.addMarker('SND_DIAL_NUM_01', 12.877, 0.287);
+					fx.addMarker('SND_DIAL_NUM_02', 13.184, 0.294);
+					fx.addMarker('SND_DIAL_NUM_03', 13.478, 0.287);
+					fx.addMarker('SND_DIAL_NUM_04', 13.766, 0.287);
+					fx.addMarker('SND_DIAL_NUM_05', 14.054, 0.287);
+					fx.addMarker('SND_DIAL_NUM_06', 14.340, 0.287);
+					fx.addMarker('SND_DIAL_NUM_07', 14.627, 0.313);
+					fx.addMarker('SND_DIAL_NUM_08', 14.941, 0.287);
+					fx.addMarker('SND_DIAL_NUM_09', 15.228, 0.287);
+					fx.addMarker('SND_BTN_DOWN1', 15.516, 0.102);
+					fx.addMarker('SND_BTN_DOWN2', 15.668, 0.096);
+					fx.addMarker('SND_BTN_DOWN3', 15.814, 0.134);
+					
+					fx.addMarker('SND_NOTE_A0', 15.998, 1.326);
+					fx.addMarker('SND_NOTE_A1', 17.424, 1.290);
+					fx.addMarker('SND_NOTE_A2', 18.714, 1.255);
+					fx.addMarker('SND_NOTE_A3', 19.969, 1.219);
+					fx.addMarker('SND_NOTE_A4', 21.188, 1.169);
+					fx.addMarker('SND_NOTE_A5', 22.357, 1.219);
+					fx.addMarker('SND_NOTE_A6', 23.576, 0.955);
+					
+					fx.addMarker('SND_SUCCESS1', 24.532, 1.776);
+					fx.addMarker('SND_SUCCESS2', 26.308, 1.649);
+					fx.addMarker('SND_SUCCESS3', 27.957, 1.882);					
+					
+					fx.addMarker('SND_CARD_OPEN1', 29.839, 0.222);
+					fx.addMarker('SND_CARD_OPEN2', 30.060, 0.318);
+					fx.addMarker('SND_CARD_OPEN3', 30.378, 0.236);
+					
+					fx.addMarker('SND_CARD_CLOSE1', 30.615, 0.252);
+					fx.addMarker('SND_CARD_CLOSE2', 30.867, 0.227);
+					fx.addMarker('SND_CARD_CLOSE3', 31.093, 0.227);
+					
+					fx.addMarker('SND_LVL_SCENE_CHANGE1', 31.320, 1.380);
+					
+					fx.addMarker('SND_PREC_RES_01', 32.700, 0.499);
+					fx.addMarker('SND_PREC_RES_02', 33.199, 0.529);
+					fx.addMarker('SND_PREC_RES_03', 33.727, 0.560);
+					fx.addMarker('SND_PREC_RES_04', 34.287, 0.422);
+					fx.addMarker('SND_PREC_RES_05', 34.710, 0.447);
+					fx.addMarker('SND_PREC_RES_06', 35.157, 0.474);
+					fx.addMarker('SND_PREC_RES_07', 35.630, 0.307);
+					fx.addMarker('SND_PREC_RES_08', 35.937, 0.325);
+					
+					fx.addMarker('SND_EXCLAMATION1', 36.262, 0.583);
+					fx.addMarker('SND_EXCLAMATION2', 36.845, 0.436);
+					fx.addMarker('SND_EXCLAMATION3', 37.281, 0.490);
+					fx.addMarker('SND_EXCLAMATION4', 37.771, 0.550);
+					
+					fx.addMarker('SND_TICK1', 38.321, 0.326);
+					fx.addMarker('SND_TICK2', 38.647, 0.312);
+					fx.addMarker('SND_TICK3', 38.959, 0.302);
+					
+					fx.addMarker('SND_POP1', 39.260, 0.129);
+					fx.addMarker('SND_POP2', 39.389, 0.085);
+					fx.addMarker('SND_POP3', 39.474, 0.046);
+					
+					fx.addMarker('SND_LVL_QUEST_CHANGE1', 39.520, 1.990);
+					
+					fx.addMarker('SND_BOW1', 41.510, 0.204);
+					fx.addMarker('SND_BOW2', 41.714, 0.193);
+					fx.addMarker('SND_BOW3', 41.907, 0.182);
+					
+					
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE1', 42.089, 0.319);
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE2', 42.408, 0.247);
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE3', 42.655, 0.237);
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE4', 42.892, 0.259);
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE5', 43.151, 0.166);
+					
+					fx.addMarker('SND_BLOCK_GROUND1', 43.317, 0.035);
+					fx.addMarker('SND_BLOCK_GROUND2', 43.353, 0.032);
+					fx.addMarker('SND_BLOCK_GROUND3', 43.384, 0.030);
+					fx.addMarker('SND_BLOCK_GROUND4', 43.414, 0.033);
+					
+					fx.addMarker('SND_BLOCK_FALL1', 43.447, 0.466);
+					
+					fx.addMarker('SND_BLOCK_BOUNCE1', 43.913, 0.147);
+					fx.addMarker('SND_BLOCK_BOUNCE2', 44.060, 0.201);
+					fx.addMarker('SND_BLOCK_BOUNCE3', 44.262, 0.104);
+
+					}
+					game.add.sprite(0, 0, 'PIC_BGD');
+					//game.add.sprite(180,10, 'PIC_MOSAIC_BGD');
+					//console.log('create');
+					//lvlCap = game.add.text(320, 40, 'Mosaic',{fill:"#482f11", font:"36px Arial", align: "center"});
+						
+				//	'PIC_MOSAIC_ELEMENTS3', 'assets/kneo_assets/mosaic_parts3.png', 320, 320);
+				//	game.load.image('PIC_MOSAIC_READY1', 'assets/kneo_assets/triangle.png');
+				//	game.load.image('PIC_MOSAIC_READY2', 'assets/kneo_assets/hexagon.png');
+				//	game.load.image('PIC_MOSAIC_READY3', 'assets/kneo_assets/star.png');					
+				//	
+				//	game.load.image('PIC_MOSAIC_LIGHT1'
+				//	
+					bgdGrp = game.add.group();
+					game.input.onUp.add(onGameUp, this);
+			
+					//original = game.add.sprite(215,53,'PIC_MOSAIC_READY');
+					//original.visible = false;
+					
+					preStartPage=new PreStartPage(game, startClick);
+					preStartPage.init('Build the pyramid of these elements');
+					
+					
+					
+					scrScrn = new ScoreScreen(game, resetMinigame);
+					scrScrn.init();
+
+					var inf=new Infr(game, playSound);
+					inf.init(30, 1000);
+					informers.push(inf);
+					
+					var inf=new Infr(game, playSound);
+					inf.init(610, 1000);
+					informers.push(inf);
+
+					Init();
+					//fpsInformer = game.add.text(50,50,'FPS');
+					this.game.time.advancedTiming = true;
+				}
+
+				
+				
+				function onElemDown(item, pointer) {
+					//console.log('onElemDown');
+					if (!item.isPlacedCorrectly){
+						draggedElement = item;
+						draggedDx = draggedElement.x - pointer.x;
+						draggedDy = draggedElement.y - pointer.y;					
+					}
+
+				}
+				
+				function onElemUp(item, pointer) {
+					//console.log('onElemUp');
+					stopDraggingElement();
+				}				
+				
+				function onGameUp(item, pointer) {
+					//console.log('onGameUp');
+					stopDraggingElement();
+				}				
+				
+				function onFrame(){
+					if (draggedElement){
+						draggedElement.x = game.input.activePointer.x + draggedDx;
+						draggedElement.y = game.input.activePointer.y + draggedDy;
+					}
+				}
+				
+				
+				function stopDraggingElement() {
+					if (draggedElement){
+						if (Routines.prototype.isDistBetweenPtsSmallerThan(draggedElement.x, draggedElement.y, 
+																	draggedElement.corX, draggedElement.corY, 20)){
+							draggedElement.x = draggedElement.corX;
+							draggedElement.y = draggedElement.corY;
+							draggedElement.isPlacedCorrectly = true;
+							setScore(0,1,true);
+							playSound('SND_POP',3);
+						}						
+					
+						draggedElement = null;
+						//console.log('stopDraggingElement');
+						//console.log(allPlaced);
+						
+						if (allPlaced()){
+							showOriginal();
+							//endGame();	
+							//console.log('endGame called')
+						}
+					}
+				}
+				
+				function onOrigTwnComplete() {
+					if (figureId==3){
+						endGame();
+					}
+					else{
+						initElements(figureId+1);
+						playSound('SND_LVL_SCENE_CHANGE1');
+					}
+				}
+				
+				
+				function showOriginal() {
+					original.alpha = 0;
+					original.visible = true;
+					var twn = game.add.tween(original);
+					twn.to({alpha:1},500);
+					twn.onComplete.add(onOrigTwnComplete, this)
+					twn.start();
+				}
+				
+				
+				
+				function allPlaced() {
+					
+					//console.log(b);
+					var b = true;
+					var len = elements.length;
+					//console.log('COORDS');
+					for (var i=0; i<len; i++){
+						
+					//	console.log(elements[i].x+' '+elements[i].y);
+						if (!elements[i].isPlacedCorrectly){
+							b = false;
+							break;
+						}
+					}
+				//	b = false;
+					//console.log(b);
+					return b;
+				}
+				
+				
+				function onElementDragStop(item, pointer) {
+					//console.log('dragStop');
+					//console.log(item);
+
+					if (Routines.prototype.isDistBetweenPtsSmallerThan(item.x, item.y, item.corX, item.corY, 100)){
+						item.x = item.corX;
+						item.y = item.corY;
+					}
+				}	
+				
+				
+				function Init() {
+					informers[0].reset(2,1,'reaction',false,200, 130);	
+					
+					informers[1].reset(10,1,'floors',true,10, 100);					
+								
+					
+					playSound('SND_LVL_START1');
+					
+					preStartPage.show();
+					
+					initElements(1);
+					for (var i=0; i<elements.length; i++){
+						var elem = elements[i];
+						elem.x = initPos[2*i];
+						elem.y = initPos[2*i+1];
+						elem.frId = i;
+
+						elem.isPlacedCorrectly = false;
+					}
+					
+					original.visible = false;
+				
+				}
+				
+				function initElements(id) {
+					figureId = id;
+				
+					if (mosaicBGD){mosaicBGD.destroy()}
+					if (original){original.destroy()}
+					if (originalLight){originalLight.destroy()}
+					
+					mosaicBGD = game.add.sprite(180,10,'PIC_MOSAIC_BGD'+id, 0, bgdGrp);
+					
+					var len = elements.length;
+					
+					for (var i=0; i<len; i++){
+						elements[i].destroy();
+					}					
+					elements.length = 0;
+					
+					initPos = allInitPos[id-1];
+					corPos = allCorPos[id-1];
+					
+					for (var i=0; i<7; i++){
+						var elem = game.add.sprite(initPos[2*i],initPos[2*i+1],'PIC_MOSAIC_ELEMENTS'+id,i,bgdGrp);
+						elem.frId = i;
+						elem.corX = corPos[2*i];
+						elem.corY = corPos[2*i+1];
+						elem.isPlacedCorrectly = false;
+						elements.push(elem);
+						elem.inputEnabled = true;
+						elem.input.start(0, true);
+						elem.input.useHandCursor = true;
+						elem.input.pixelPerfectClick = true;
+						elem.events.onInputDown.add(onElemDown, this);
+						elem.events.onInputUp.add(onElemUp, this);
+					}
+					
+					
+					
+					
+				//	original = game.add.sprite(allOrigPos[2*id],allOrigPos[2*id+1],'PIC_MOSAIC_READY'+id, 0, bgdGrp);
+					original = game.add.sprite(allOrigPos[2*(id-1)],allOrigPos[2*(id-1)+1],'PIC_MOSAIC_LIGHT'+id, 0, bgdGrp);
+					originalLight = game.add.sprite(allOrigPos[2*(id-1)],allOrigPos[2*(id-1)+1],'PIC_MOSAIC_LIGHT'+id, 0, bgdGrp);
+				
+					original.visible = false;
+					originalLight.visible = false;					
+				}
+				
+				function endGame() {
+					totScr = informers[0].score;
+					game.onScore.dispatch(totScr);
+					scrScrn.show(totScr);
+					playSound('SND_LEVEL_FINISHED1');				
+				}
+				
+				
+				function resetMinigame() {
+					//console.log('resetMinigame');
+					scrScrn.hide();
+					Init();
+				}
+				
+				
+			
+
+
+				
+				// THE GAME IS GOING TO BE UPDATED
+				function update() {
+				//	console.log(getTimer());
+					onFrame();
+	    		}
+				
+				function getDistanceBetween(x1,y1,x2,y2){
+					return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+				}	
+				
+				function randomNumberFromTo(mn,mx){
+					return Math.floor(mn+(mx-mn)*Math.random());
+				}			
+				
+				function isDistBetweenPtsSmallerThan(x1,y1,x2,y2,threshold){
+					var dx = Math.abs(x2 - x1);
+					var dy = Math.abs(y2 - y1);
+					var trSQR = threshold * threshold;
+					if (dx > threshold) { return false }
+					if (dy > threshold) { return false }
+					if ((dx<threshold*0.7)&&(dy<threshold*0.7)){return true}
+					return (dx * dx + dy * dy < trSQR);					
+				}
+				
+				function render() {
+					//fpsInformer.setText("FPS: " + this.game.time.fps);
+	    		}
+				
+				
+				
+				function startClick(button) {
+					preStartPage.hide();
+					playSound('SND_BTN_DOWN',3);
+
+					phase = 1;
+				//	onTimeStarted();
+				}
+				
+				function playSound(pref,vars) {
+					//console.log('playSound '+pref);
+					//console.log(vars);
+
+					if (vars){
+						var r=1;
+						if (vars>1){
+							r = Math.floor(Math.random()*vars)+1;
+						}	
+						fx.play(pref+r);
+					}
+					else{
+						fx.play(pref)
+					}					
+				}	
+				
+				function setScore(infId, scr, add)
+				{
+					//console.log('setScrore '+scr+' '+infId+' '+add);
+					//console.log(informers[infId]);
+					if (add){
+						informers[infId].addScore(scr);
+					}
+					else{
+						informers[infId].showScore(scr);
+					}
+				}
+				
+				game.on('score', function() {
+					console.log('@@@@@@@@@@@@@@@@on score', arguments);
+				});				
+				
+				
+	    		};
+		</script>
+    </head>
+    <body>
+    </body>
+</html>
+
+
+
+
+

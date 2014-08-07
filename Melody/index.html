@@ -1,0 +1,383 @@
+<!doctype html>
+<html>
+	<head>
+    		<script src="js/phaser.min.js"></script>
+    		<script src="js/Infr.js"></script>
+			<script src="js/ScoreScreen.js"></script>
+			<script src="js/NoteButton.js"></script>
+			<script src="js/PreStartPage.js"></script>
+    		<style>
+    			body{margin:0}
+    		</style>
+    		<script type="text/javascript">
+			window.onload = function() {
+				// here we define a new 640x480 game, with three core functions:
+				// onPreload to be executed when the game preloads
+				// onCreate to be executed once the game is firstly created
+				// onUpdate to be called every time the game us updated
+				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '', { preload: preload, create: create, update: update, render:render });
+				game.onScore = new Phaser.Signal();
+				game.on = function(event, listener) {
+					event = event.charAt(0).toUpperCase() + event.slice(1);
+					if(game.hasOwnProperty('on' + event)) {
+						console.log('has property');
+						game['on' + event].add(listener);
+					} else {
+						console.log('do not have- on' + event)
+					}
+				};	
+				
+				window.game = game;
+				
+				var preloadProgress=null;
+				var preloadText=null;
+				function preload() {
+					preloadProgress = game.add.group();
+					
+					preloadText = game.add.text(10,10,'Loading',{fill:"#ffffff"});
+					preloadProgress.add(preloadText);
+				
+					game.load.image('PIC_BGD', 'assets/kneo_assets/bg.png');
+					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
+					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+					
+					game.load.spritesheet('PIC_NOTE_BTNS', 'assets/kneo_assets/figury_melody.png', 200, 200);
+					game.load.bitmapFont('PIC_FONT', 'assets/fonts/simple_blue.png', 'assets/fonts/simple_blue.fnt');
+					
+					
+					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
+					
+					
+					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);		
+					game.load.spritesheet('PIC_COMMAND_TEXT', 'assets/PhaseCommand.png', 250, 43);
+					
+					
+					game.load.atlasJSONArray('PIC_GENRE_ICONS', 'assets/GenreSideSymbol.png', 'assets/GenreSideSymbol.json');
+					game.load.spritesheet('PIC_SCORE_FLAG', 'assets/ScoreFlag.png', 54,147);					
+					game.load.atlasXML('PIC_ALL_ART', 'assets/Art.png', 'assets/Art.xml');
+					
+					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
+					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');					
+					
+					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');		
+				   
+				}
+
+
+
+				var notesSprites=[]; 
+				
+				var gamePhase=0;//0- подготовка, 1 - показываем, 2 - ждём ввода
+				var melodyLength=0;
+				var melodyNotes=[];//
+				var currentMelodyNoteId=0;
+				
+				var playMelodyTimer=null;
+				var playMelodyTimerRepeatCount=0;
+				var playMelodyTimerDelay=100;
+				
+				var commandText=null;
+				var errorsNum=0;
+				
+				var totScr=0;
+				
+				var informers=[];
+				var preStartPage;
+				
+				var scrScrn = null;
+				
+				
+				//var fpsInformer;
+				var fx;				
+				// THE GAME HAS BEEN CREATED
+				function create() {
+
+					//Sounds init
+					{
+					fx = game.add.audio('sfx');
+					fx.override = true;//??? зачем это?
+					fx.addMarker('SND_QUESTION1', 0, 0.39);
+					fx.addMarker('SND_QUESTION2', 0.42, 0.39);
+					fx.addMarker('SND_QUESTION3', 0.85, 0.39);
+					fx.addMarker('SND_QUESTION4', 1.272, 0.349);
+					fx.addMarker('SND_POP1', 1.666, 0.079);
+					fx.addMarker('SND_POP2', 1.798, 0.075);
+					fx.addMarker('SND_POP3', 1.886, 0.046);
+					fx.addMarker('SND_LVL_START1', 1.931, 3.469);
+					fx.addMarker('SND_LEVEL_FINISHED1', 5.4, 4.582);
+					fx.addMarker('SND_ERROR1', 9.982, 0.836);
+					fx.addMarker('SND_ERROR2', 10.819, 1.033);
+					fx.addMarker('SND_ERROR3', 11.852, 0.738);
+					fx.addMarker('SND_DIAL_NUM_00', 12.590, 0.287);
+					fx.addMarker('SND_DIAL_NUM_01', 12.877, 0.287);
+					fx.addMarker('SND_DIAL_NUM_02', 13.184, 0.294);
+					fx.addMarker('SND_DIAL_NUM_03', 13.478, 0.287);
+					fx.addMarker('SND_DIAL_NUM_04', 13.766, 0.287);
+					fx.addMarker('SND_DIAL_NUM_05', 14.054, 0.287);
+					fx.addMarker('SND_DIAL_NUM_06', 14.340, 0.287);
+					fx.addMarker('SND_DIAL_NUM_07', 14.627, 0.313);
+					fx.addMarker('SND_DIAL_NUM_08', 14.941, 0.287);
+					fx.addMarker('SND_DIAL_NUM_09', 15.228, 0.287);
+					fx.addMarker('SND_BTN_DOWN1', 15.516, 0.102);
+					fx.addMarker('SND_BTN_DOWN2', 15.668, 0.096);
+					fx.addMarker('SND_BTN_DOWN3', 15.814, 0.134);
+					
+					fx.addMarker('SND_NOTE_A0', 15.998, 1.326);
+					fx.addMarker('SND_NOTE_A1', 17.424, 1.290);
+					fx.addMarker('SND_NOTE_A2', 18.714, 1.255);
+					fx.addMarker('SND_NOTE_A3', 19.969, 1.219);
+					fx.addMarker('SND_NOTE_A4', 21.188, 1.169);
+					fx.addMarker('SND_NOTE_A5', 22.357, 1.219);
+					fx.addMarker('SND_NOTE_A6', 23.576, 0.955);
+					}
+					game.add.sprite(0, 0, 'PIC_BGD');
+					
+					//lvlCap = game.add.text(320, 40, 'Melody',{fill:"#482f11", font:"36px Arial", align: "center"});
+					
+					
+					commandText = game.add.bitmapText(260,15,'PIC_FONT',"get ready...")
+				//	commandText=game.add.sprite(320,91,'PIC_COMMAND_TEXT');
+				//	commandText.anchor.setTo(0.5, 0.5);
+					
+					
+					var s0 = Math.floor(Math.random() * 5);
+					var c0 = Math.floor(Math.random() * 6);
+					for (var i = 0; i < 7; i++) {
+						var nt = new NoteButton(game);
+						var ax = 130+120*i;
+						var ay = ((i%2==0)?450:210);							
+
+						nt.init(ax,ay, i, 1 + (i+c0) % 6, 1 + (i+s0) % 5);
+						notesSprites.push(nt);
+						nt.body.inputEnabled = true;
+						nt.body.input.useHandCursor = true;
+						//nt.body.input.start(0, true);
+						nt.body.events.onInputDown.add(onClick, nt);
+					}
+					
+					playMelodyTimer=game.time.create(false);
+					playMelodyTimerRepeatCount=1;
+					playMelodyTimerDelay=500;
+				
+					preStartPage=new PreStartPage(game, startClick);
+					preStartPage.init('Watch the game light up an increasingly complex series of buttons, and then attempt to recreate the same pattern. ');					
+
+					
+					scrScrn = new ScoreScreen(game, resetMinigame);
+					scrScrn.init();
+					
+					var inf=new Infr(game);
+					inf.init(200, 700);
+					informers.push(inf);
+					
+					var inf=new Infr(game);
+					inf.init(540, 700);
+					informers.push(inf);
+					
+					var inf=new Infr(game);
+					inf.init(870, 700);
+					informers.push(inf);
+					Init();
+					//fpsInformer = game.add.text(50,50,'FPS');
+					this.game.time.advancedTiming = true;	
+					
+					
+				
+				}
+					
+				function Init() {
+					//console.log('Init');
+					errorsNum = 0;
+					melodyLength=0;
+					melodyNotes=[];//
+					currentMelodyNoteId=0;
+					totScr=0;
+				
+					informers[0].reset(0,1,'memory',false,200, 130);					
+					informers[1].reset(7,1,'round',false,10, 130);
+					informers[2].reset(5,1,'errors',true,3, 130);					
+				//	showNumbersTimer.stop();
+				//	delayTimer.stop();
+					playSound('SND_LVL_START1');
+					setGamePhase(0);
+					
+					preStartPage.show();
+				}		
+				
+				function resetMinigame() {
+					//console.log('resetMinigame');
+					scrScrn.hide();
+					Init();
+				}
+				
+				function onClick(item, pointer) {
+					if (gamePhase == 2) {
+						var nid = melodyNotes[currentMelodyNoteId];
+						var nb = item.owner;
+							if (nb.noteId == nid) {
+								nb.shake();
+								currentMelodyNoteId++;
+								//начисляем очки по правилу треугольных чисел
+								//получается x^2+x
+								setScrore(0,2,true);
+								playSound('SND_NOTE_A' + nid);
+								if (currentMelodyNoteId >= melodyNotes.length) {
+									setGamePhase(1);
+								}
+							}
+							else {
+								nb.showError();
+								errorsNum++;
+								setScrore(2,errorsNum);
+								playSound('SND_ERROR',3);
+							
+								if (errorsNum >= 3) {
+									//TODO: stop
+									//dispatchEvent(new ScoreEvent(ScoreEvent.GAME_END));
+									//console.log('GAME_END');
+
+									totScr = informers[0].score;
+									game.onScore.dispatch(totScr);
+									scrScrn.show(totScr);
+									playSound('SND_LEVEL_FINISHED1');
+								}
+							}
+						
+					}				
+
+				}				
+				
+				function setGamePhase(ph) {	
+					gamePhase=ph;
+					switch (ph){
+						case 0:{
+							commandText.text = 'get ready...';
+							break;
+						}
+						case 1:{
+							commandText.text = 'watch and memorize';
+							addNewMelodyNote();
+							setScrore(1,melodyLength);
+							startPlayingMelody();				
+							break;
+						}
+						case 2:{
+							commandText.text = 'repeat the sequence';
+							currentMelodyNoteId = 0;
+							break;
+						}
+					}
+				}
+				
+				function startPlayingMelody() 
+				{
+					currentMelodyNoteId = 0;
+					playMelodyTimerDelay = 1500; //пауза перед первым проигрыванием ноты
+					playMelodyTimer.add(playMelodyTimerDelay,onPlayTimer, this);
+					playMelodyTimer.start();
+				}
+				
+				function addNewMelodyNote()
+				{
+				//	console.log('addNewMelodyNote');
+					melodyLength++;
+					var need1More=true;
+					while (need1More){
+						var r=Math.floor((Math.random() * notesSprites.length));
+						if (melodyLength==1){
+							need1More = false;
+						}
+						else{
+							//console.log('r: '+r+' note: '+melodyNotes[melodyLength-2]);
+							need1More = (r==melodyNotes[melodyLength-2]);
+						}
+						
+					}
+					melodyNotes.push(r);
+					playMelodyTimerRepeatCount = melodyNotes.length;
+					
+				}				
+				// THE GAME IS GOING TO BE UPDATED
+				function update() {	
+					
+					
+	    		}
+					
+				function render() {
+					//fpsInformer.setText("FPS: " + this.game.time.fps);
+	    		}
+
+				
+				function startClick(button) {
+					preStartPage.hide();
+					playSound('SND_BTN_DOWN',3);
+					setGamePhase(1);				
+				}
+				
+				function playSound(pref,vars) {
+					//console.log('playSound '+pref);
+					//console.log(vars);
+
+					if (vars){
+						var r=1;
+						if (vars>1){
+							r = Math.floor(Math.random()*vars)+1;
+						}	
+						fx.play(pref+r);
+					}
+					else{
+						fx.play(pref)
+					}					
+				}
+				
+				function onPlayTimer()
+				{
+					var nid = melodyNotes[currentMelodyNoteId];
+					var nb = notesSprites[nid];
+					nb.shake();
+					playSound('SND_NOTE_A' + nid);
+					if (currentMelodyNoteId < melodyNotes.length - 3) {
+						playMelodyTimerDelay = 300; //быстрее проигрываем ранее слышанные ноты
+					}
+					else {
+						playMelodyTimerDelay = 500; //между 2мя проигрываниями нот
+					}
+					
+					currentMelodyNoteId++;
+					if (currentMelodyNoteId>=melodyNotes.length) {
+						//playMelodyTimer.stop(); // - вместо останавливания сейчас просто не запускаем ещё раз
+						setGamePhase(2);
+					}
+					else{
+						playMelodyTimer.add(playMelodyTimerDelay,onPlayTimer, this);
+					}
+				}	
+				
+				function setScrore(infId, scr, add)
+				{
+					//console.log('setScrore '+scr+' '+infId+' '+add);
+					if (add){
+						informers[infId].addScore(scr);
+					}
+					else{
+						informers[infId].showScore(scr);
+					}
+				}
+				
+				game.on('score', function() {
+					console.log('@@@@@@@@@@@@@@@@on score', arguments);
+				});				
+				
+				
+	    		};
+		</script>
+    </head>
+    <body>
+    </body>
+</html>
+
+
+
+
+

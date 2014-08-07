@@ -1,0 +1,513 @@
+<!doctype html>
+<html>
+	<head>
+    		<script src="js/phaser.min.js"></script>
+			<script src="js/Routines.js"></script>
+    		<script src="js/Infr.js"></script>
+			<script src="js/ScoreScreen.js"></script>
+			<script src="js/PreStartPage.js"></script>
+			
+			<script src="js/FallingShape.js"></script>
+
+
+    		<style>
+    			body{margin:0}
+    		</style>
+    		<script type="text/javascript">
+			window.onload = function() {
+				// here we define a new 640x480 game, with three core functions:
+				// onPreload to be executed when the game preloads
+				// onCreate to be executed once the game is firstly created
+				// onUpdate to be called every time the game us updated
+				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '', {preload: preload, create: create, update: update, render:render});
+				game.onScore = new Phaser.Signal();
+				game.on = function(event, listener) {
+					event = event.charAt(0).toUpperCase() + event.slice(1);
+					if(game.hasOwnProperty('on' + event)) {
+						console.log('has property');
+						game['on' + event].add(listener);
+					} else {
+						console.log('do not have- on' + event)
+					}
+				};	
+				
+				window.game = game;
+				
+				
+				var preloadProgress = null;
+				var preloadText = null;
+				function preload() {
+					preloadProgress = game.add.group();
+					
+					preloadText = game.add.text(10,10,'Loading',{fill:"#ffffff"});
+					preloadProgress.add(preloadText);
+					
+						    //	You can listen for each of these events from Phaser.Loader
+					game.load.onLoadStart.add(loadStart, this);
+					game.load.onFileComplete.add(fileComplete, this);
+					game.load.onLoadComplete.add(loadComplete, this);
+				
+					game.load.image('PIC_BGD', 'assets/BackGround.png');
+					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png'); 
+					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+					
+					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
+					
+					game.load.bitmapFont('PIC_FONT', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
+					
+					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);								
+					
+					game.load.spritesheet('PIC_SHAPES', 'assets/kneo_assets/shapes.png', 220, 220);
+					game.load.image('PIC_LINE', 'assets/HorzLine.png');
+					game.load.image('PIC_CROSSHAIR', 'assets/CrossHair.png');
+					game.load.spritesheet('PIC_YESNO', 'assets/kneo_assets/guess_results.png',77,78);
+				
+					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
+					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');					
+					
+					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');	
+				}
+				
+				//Preload functions
+				function loadStart() {
+					//console.log("Loading ...");
+					preloadText.setText('Loading ...');
+				}
+
+				//	This callback is sent the following parameters:
+				function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
+					//console.log("File Complete: " + progress + "% - " + totalLoaded + " out of " + totalFiles+' '+cacheKey);
+					preloadText.setText("File Complete: " + progress + "% - " + totalLoaded + " out of " + totalFiles+' '+cacheKey);
+				}
+
+				function loadComplete() {
+					//console.log("Load Complete");
+					preloadText.setText("Load Complete");
+					preloadProgress.visible=false;
+				}				
+				
+				var balls = [];
+				var plannedFalls = [];
+				var receivedReplies = [];
+				
+				var fallShapeTimer = null;
+				var fallShapeTimerDelay = 4000;
+				
+				var numHits = 0;
+				var numMiss = 0;
+				var crossHair = null
+				
+				var totScr=0;
+				
+				var informers=[];
+				var preStartPage = null;
+				
+				var scrScrn = null;
+				
+				
+				//var fpsInformer;
+				var fx;				
+				// THE GAME HAS BEEN CREATED
+				function create() {
+
+					//Sounds init
+					{
+					fx = game.add.audio('sfx');
+					fx.override = true;//??? зачем это?
+					fx.addMarker('SND_QUESTION1', 0, 0.39);
+					fx.addMarker('SND_QUESTION2', 0.42, 0.39);
+					fx.addMarker('SND_QUESTION3', 0.85, 0.39);
+					fx.addMarker('SND_QUESTION4', 1.272, 0.349);
+					fx.addMarker('SND_POP1', 1.666, 0.079);
+					fx.addMarker('SND_POP2', 1.798, 0.075);
+					fx.addMarker('SND_POP3', 1.886, 0.046);
+					fx.addMarker('SND_LVL_START1', 1.931, 3.469);
+					fx.addMarker('SND_LEVEL_FINISHED1', 5.4, 4.582);
+					fx.addMarker('SND_ERROR1', 9.982, 0.836);
+					fx.addMarker('SND_ERROR2', 10.819, 1.033);
+					fx.addMarker('SND_ERROR3', 11.852, 0.738);
+					fx.addMarker('SND_DIAL_NUM_00', 12.590, 0.287);
+					fx.addMarker('SND_DIAL_NUM_01', 12.877, 0.287);
+					fx.addMarker('SND_DIAL_NUM_02', 13.184, 0.294);
+					fx.addMarker('SND_DIAL_NUM_03', 13.478, 0.287);
+					fx.addMarker('SND_DIAL_NUM_04', 13.766, 0.287);
+					fx.addMarker('SND_DIAL_NUM_05', 14.054, 0.287);
+					fx.addMarker('SND_DIAL_NUM_06', 14.340, 0.287);
+					fx.addMarker('SND_DIAL_NUM_07', 14.627, 0.313);
+					fx.addMarker('SND_DIAL_NUM_08', 14.941, 0.287);
+					fx.addMarker('SND_DIAL_NUM_09', 15.228, 0.287);
+					fx.addMarker('SND_BTN_DOWN1', 15.516, 0.102);
+					fx.addMarker('SND_BTN_DOWN2', 15.668, 0.096);
+					fx.addMarker('SND_BTN_DOWN3', 15.814, 0.134);
+					
+					fx.addMarker('SND_NOTE_A0', 15.998, 1.326);
+					fx.addMarker('SND_NOTE_A1', 17.424, 1.290);
+					fx.addMarker('SND_NOTE_A2', 18.714, 1.255);
+					fx.addMarker('SND_NOTE_A3', 19.969, 1.219);
+					fx.addMarker('SND_NOTE_A4', 21.188, 1.169);
+					fx.addMarker('SND_NOTE_A5', 22.357, 1.219);
+					fx.addMarker('SND_NOTE_A6', 23.576, 0.955);
+					
+					fx.addMarker('SND_SUCCESS1', 24.532, 1.776);
+					fx.addMarker('SND_SUCCESS2', 26.308, 1.649);
+					fx.addMarker('SND_SUCCESS3', 27.957, 1.882);					
+					
+					fx.addMarker('SND_CARD_OPEN1', 29.839, 0.222);
+					fx.addMarker('SND_CARD_OPEN2', 30.060, 0.318);
+					fx.addMarker('SND_CARD_OPEN3', 30.378, 0.236);
+					
+					fx.addMarker('SND_CARD_CLOSE1', 30.615, 0.252);
+					fx.addMarker('SND_CARD_CLOSE2', 30.867, 0.227);
+					fx.addMarker('SND_CARD_CLOSE3', 31.093, 0.227);
+					
+					fx.addMarker('SND_LVL_SCENE_CHANGE1', 31.320, 1.380);
+					
+					fx.addMarker('SND_PREC_RES_01', 32.700, 0.499);
+					fx.addMarker('SND_PREC_RES_02', 33.199, 0.529);
+					fx.addMarker('SND_PREC_RES_03', 33.727, 0.560);
+					fx.addMarker('SND_PREC_RES_04', 34.287, 0.422);
+					fx.addMarker('SND_PREC_RES_05', 34.710, 0.447);
+					fx.addMarker('SND_PREC_RES_06', 35.157, 0.474);
+					fx.addMarker('SND_PREC_RES_07', 35.630, 0.307);
+					fx.addMarker('SND_PREC_RES_08', 35.937, 0.325);
+					
+					fx.addMarker('SND_EXCLAMATION1', 36.262, 0.583);
+					fx.addMarker('SND_EXCLAMATION2', 36.845, 0.436);
+					fx.addMarker('SND_EXCLAMATION3', 37.281, 0.490);
+					fx.addMarker('SND_EXCLAMATION4', 37.771, 0.550);
+					
+					fx.addMarker('SND_TICK1', 38.321, 0.326);
+					fx.addMarker('SND_TICK2', 38.647, 0.312);
+					fx.addMarker('SND_TICK3', 38.959, 0.302);
+					
+					fx.addMarker('SND_POP1', 39.260, 0.129);
+					fx.addMarker('SND_POP2', 39.389, 0.085);
+					fx.addMarker('SND_POP3', 39.474, 0.046);
+					
+					fx.addMarker('SND_LVL_QUEST_CHANGE1', 39.520, 1.990);
+					
+					fx.addMarker('SND_BOW1', 41.510, 0.204);
+					fx.addMarker('SND_BOW2', 41.714, 0.193);
+					fx.addMarker('SND_BOW3', 41.907, 0.182);
+					
+					
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE1', 42.089, 0.319);
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE2', 42.408, 0.247);
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE3', 42.655, 0.237);
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE4', 42.892, 0.259);
+					fx.addMarker('SND_SMALL_SHAPE_BOUNCE5', 43.151, 0.166);
+					
+					fx.addMarker('SND_BLOCK_GROUND1', 43.317, 0.035);
+					fx.addMarker('SND_BLOCK_GROUND2', 43.353, 0.032);
+					fx.addMarker('SND_BLOCK_GROUND3', 43.384, 0.030);
+					fx.addMarker('SND_BLOCK_GROUND4', 43.414, 0.033);
+					
+					fx.addMarker('SND_BLOCK_FALL1', 43.447, 0.466);
+					
+					fx.addMarker('SND_BLOCK_BOUNCE1', 43.913, 0.147);
+					fx.addMarker('SND_BLOCK_BOUNCE2', 44.060, 0.201);
+					fx.addMarker('SND_BLOCK_BOUNCE3', 44.262, 0.104);	
+					
+					fx.addMarker('SND_TING1', 44.365, 1.167);
+					fx.addMarker('SND_TING2', 45.532, 1.236);
+					fx.addMarker('SND_TING3', 46.768, 1.270);					
+					
+					fx.addMarker('SND_CLICK1', 48.038, 0.005);
+					fx.addMarker('SND_CLICK2', 48.088, 0.006);
+					fx.addMarker('SND_CLICK3', 48.144, 0.005);		
+					
+					fx.addMarker('SND_SHOT_SNIPER1', 48.204, 0.889);
+					
+					}
+					game.add.sprite(0, 0, 'PIC_BGD');
+					game.add.sprite(79, 174, 'PIC_LINE');
+					//console.log('create');
+					//lvlCap = game.add.text(320, 40, 'Chessfield',{fill:"#482f11", font:"36px Arial", align: "center"});
+					
+					for (var i = 0; i < 6; i++) {
+						var fs = new FallingShape(game, playSound, onBallFailed);
+						fs.init();
+						fs.geom.inputEnabled = true;
+						fs.geom.input.useHandCursor = true;
+						fs.geom.events.onInputDown.add(onCircleMouseDown, this);
+						
+						
+						balls.push(fs);
+						
+						plannedFalls.push(false);
+						receivedReplies.push(false);
+					}
+					crossHair = game.add.sprite(0,0,'PIC_CROSSHAIR');
+					crossHair.anchor.setTo(0.5);
+					
+					fallShapeTimer = game.time.create(false);//new Timer(4000, 1);
+					//fallShapeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onFallShapeTimer);
+
+					var inf=new Infr(game, playSound);
+					inf.init(50, 200);
+					informers.push(inf);
+					
+					var inf=new Infr(game, playSound);
+					inf.init(610, 100);
+					informers.push(inf);					
+					
+					var inf=new Infr(game, playSound);
+					inf.init(610, 300);
+					informers.push(inf);					
+										
+					
+					scrScrn = new ScoreScreen(game, resetMinigame);
+					scrScrn.init();
+					
+					preStartPage=new PreStartPage(game, startClick);
+					preStartPage.init('Shoot the shape as soon as it starts falling');
+					
+					Init();
+					
+					//fpsInformer = game.add.text(50,50,'FPS');
+					this.game.time.advancedTiming = true;
+				}
+
+				function onFallShapeTimer() 
+				{
+					
+					var s = 0;
+					for (var i = 0; i < 6; i++) {
+						if (plannedFalls[i]) {
+							s++;
+						}
+					}
+					
+					if (s < 6) {
+						var r = Math.floor(Math.random() * 6);
+						while (plannedFalls[r]) {
+							r++;
+							r %= 6;
+						}
+						
+						plannedFalls[r] = true;
+						var fs = balls[r];
+						fs.fallOrder();
+						fs.speedCoef = (s+1)*0.15;
+					}
+					
+					switch (s) {
+						case 0:
+						case 1: {
+							fallShapeTimerDelay = 3000;
+						}
+						case 2:
+						case 3: {
+							fallShapeTimerDelay = 3000;
+						}
+						
+						case 4:
+						case 5: {
+							fallShapeTimerDelay = 2000;
+						}
+					}
+					if (s < 5) {
+						fallShapeTimer.stop();
+						fallShapeTimer.add(fallShapeTimerDelay, onFallShapeTimer);
+						fallShapeTimer.start();
+					}
+				}
+				
+				function onTimeStarted() {
+					fallShapeTimer.stop();
+					fallShapeTimer.add(fallShapeTimerDelay, onFallShapeTimer);
+					fallShapeTimer.start();
+				}
+				
+				function onFrame() 
+				{
+					var len = balls.length;
+					for (var i=0; i<len; i++) {
+						balls[i].step(0.15);
+					}
+					
+					crossHair.x = game.input.activePointer.x;
+					crossHair.y = game.input.activePointer.y;
+				
+					
+				}
+				
+				function onCircleMouseDown(item, pointer) 
+				{
+					
+						var fs = item.owner
+						if (fs.moveMode == 2) {
+							fs.showCorrect();
+							playSound('SND_SUCCESS',3);
+							playSound('SND_SHOT_SNIPER',1);
+							var ft = fs.getFallTime();
+							if (ft < 1.4) {
+								var scr = 35;
+							}
+							else {
+								var scr = 35 * 1.4 / ft;
+							}
+							
+							
+							
+							setScore(0, scr, true);
+							numHits++;
+							setScore(1,numHits);
+							if (numHits + numMiss == 6) {
+								endGame();
+							}
+						}
+						else {
+							fs.showWrong();
+							playSound('SND_ERROR',3);
+							plannedFalls[fs.arId] = true;
+							receivedReplies[fs.arId] = true;
+							numMiss++;
+							setScore(2,numMiss);
+							
+							if (numHits + numMiss == 6) {
+								endGame();
+							}
+						}
+					
+				}
+				
+				function onBallFailed() 
+				{
+					numMiss++;
+					setScore(2,numMiss);
+					playSound('SND_ERROR',3);
+					if (numHits + numMiss == 6) {
+						endGame();
+					}
+				}
+				
+		
+				
+				
+				function Init() {
+					informers[0].reset(1,1,'reaction',false,200, 130);	
+					
+					informers[1].reset(7,1,'hits',true,32, 100);					
+					informers[2].reset(5,1,'misses',false,3, 100);					
+					
+					
+					playSound('SND_LVL_START1');
+					
+					preStartPage.show();
+					
+									
+					for (var i = 0; i < 6; i++) {
+						balls[i].reset(i);
+						plannedFalls[i] = false;
+						receivedReplies[i] = false;
+					}
+					numHits = 0;
+					numMiss = 0;
+				//	addChild(crossHair);
+					
+					fallShapeTimerDelay = 4000;
+					fallShapeTimer.stop();
+				}
+				
+				
+				function endGame() {
+					totScr = informers[0].score;
+					game.onScore.dispatch(totScr);
+					scrScrn.show(totScr);
+					playSound('SND_LEVEL_FINISHED1');				
+				}
+				
+				
+				function resetMinigame() {
+					//console.log('resetMinigame');
+					scrScrn.hide();
+					Init();
+				}
+				
+				
+				function onClick(item, pointer) {
+
+				}				
+
+
+				
+				// THE GAME IS GOING TO BE UPDATED
+				function update() {
+				//	console.log(getTimer());
+					onFrame();
+	    		}
+				
+				function getDistanceBetween(x1,y1,x2,y2){
+					return Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+				}	
+				
+				function randomNumberFromTo(mn,mx){
+					return Math.floor(mn+(mx-mn)*Math.random());
+				}			
+				
+				function isDistBetweenPtsSmallerThan(x1,y1,x2,y2,threshold){
+					var dx = Math.abs(x2 - x1);
+					var dy = Math.abs(y2 - y1);
+					var trSQR = threshold * threshold;
+					if (dx > threshold) { return false }
+					if (dy > threshold) { return false }
+					if ((dx<threshold*0.7)&&(dy<threshold*0.7)){return true}
+					return (dx * dx + dy * dy < trSQR);					
+				}
+				
+				function render() {
+					//fpsInformer.setText("FPS: " + this.game.time.fps);
+	    		}
+				
+				
+				
+				function startClick(button) {
+					preStartPage.hide();
+					playSound('SND_BTN_DOWN',3);
+
+				
+					onTimeStarted();
+				}
+				
+				function playSound(pref,vars) {
+					if (vars){
+						var r=1;
+						if (vars>1){
+							r = Math.floor(Math.random()*vars)+1;
+						}	
+						fx.play(pref+r);
+					}
+					else{
+						fx.play(pref)
+					}					
+				}	
+				
+				function setScore(infId, scr, add)
+				{
+
+					if (add){
+						informers[infId].addScore(scr);
+					}
+					else{
+						informers[infId].showScore(scr);
+					}
+				}
+				
+				game.on('score', function() {
+					console.log('@@@@@@@@@@@@@@@@on score', arguments);
+				});				
+				
+				
+	    		};
+		</script>
+    </head>
+    <body>
+    </body>
+</html>
+
+
+
+
+

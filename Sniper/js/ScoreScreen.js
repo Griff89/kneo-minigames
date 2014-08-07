@@ -1,0 +1,81 @@
+ScoreScreen = function(game, resFn) {
+		this.game=game;
+		this.resFn = resFn;
+		
+		this.content=null;
+		
+		this.bgd=null;
+		this.plank=null;
+		this.capSpr=null;
+		this.scrTxt=null;
+		this.resBtn = null;
+};
+
+ScoreScreen.prototype = {
+	init: function (){	
+		this.content = this.game.add.group();
+		this.content.visible = false;
+		
+		var bmd = this.game.add.bitmapData(1000,750);
+		bmd.ctx.beginPath();
+		bmd.ctx.rect(0,0,1000,750);
+		bmd.ctx.fillStyle = '#ffffff';
+		bmd.ctx.fill();					
+		this.bgd = this.game.add.sprite(0, 0, bmd, null,this.content);
+		this.bgd.alpha=0.75;
+		this.bgd.inputEnabled = true;		
+		
+
+		this.plank = this.game.add.sprite(50,100,'PIC_PRESTART_PANEL', null,this.content);
+		this.plank.scale.set(0.68,0.68);
+		
+		this.capSpr = this.game.add.sprite(340,60,'PIC_LVL_END',null,this.content);
+
+
+        this.boy = this.game.add.sprite(1026,141,'PIC_GAME_DESIGNER',null, this.content);
+
+		this.scrTxt = this.game.add.text(375, 218,'Your score:',
+							{fill:"#991e01", font:"45px Arial", align: "center"},this.content);
+		this.scrTxt.anchor.setTo(0.5, 0.5);		
+		
+		
+		this.resBtn=this.game.add.button(340,377,'PIC_RESTART_BTN',this.resFn,this,1,0,2);
+		//TODO: как обратиться к самостоятельно дописанной функции из game
+		console.log('resetClick button created');
+		
+		this.content.add(this.bgd);
+		this.content.add(this.plank);
+		this.content.add(this.capSpr);
+		this.content.add(this.scrTxt);
+		this.content.add(this.resBtn);
+		
+		this.capSpr.anchor.setTo(0.5, 0.5);
+		this.resBtn.anchor.setTo(0.5, 0.5);
+		
+		
+	},
+	
+	
+	show: function (scr) {
+        this.boy.x = 1026;
+        this.game.add.tween(this.boy).to({x:566},1000, Phaser.Easing.Linear.None, true, 0, 0,false);
+
+		this.scrTxt.setText('Your score: '+scr.toFixed(0));
+
+        if (parent.window.kw && parent.window.app && parent.window.app.getMediator) {
+            parent.window.app.getMediator().trigger('onSetScore', 75, +scr.toFixed(0));
+            parent.window.app.getMediator().trigger('onLevelUp', 75);
+        }
+
+		this.content.visible = true;
+	},
+	
+	hide: function () {
+		this.content.visible = false;
+	},
+	
+	update: function () {
+	
+		
+	}
+}

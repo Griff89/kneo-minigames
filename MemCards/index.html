@@ -1,0 +1,550 @@
+<!doctype html>
+<html>
+	<head>
+    		<script src="js/phaser.min.js"></script>
+    		<script src="js/Infr.js"></script>
+			<script src="js/ScoreScreen.js"></script>
+			<script src="js/MemoryCard.js"></script>
+			<script src="js/PreStartPage.js"></script>
+    		<style>
+    			body{margin:0}
+    		</style>
+    		<script type="text/javascript">
+			window.onload = function() {
+				// here we define a new 640x480 game, with three core functions:
+				// onPreload to be executed when the game preloads
+				// onCreate to be executed once the game is firstly created
+				// onUpdate to be called every time the game us updated
+				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '', { preload: preload, create: create, update: update, render:render });
+				game.onScore = new Phaser.Signal();
+				game.on = function(event, listener) {
+					event = event.charAt(0).toUpperCase() + event.slice(1);
+					if(game.hasOwnProperty('on' + event)) {
+						console.log('has property');
+						game['on' + event].add(listener);
+					} else {
+						console.log('do not have- on' + event)
+					}
+				};	
+				
+				window.game = game;
+				
+				var preloadProgress=null;
+				var preloadText=null;
+				function preload() {
+					preloadProgress = game.add.group();
+					
+					preloadText = game.add.text(10,10,'Loading',{fill:"#ffffff"});
+					preloadProgress.add(preloadText);
+
+				
+					game.load.image('PIC_BGD', 'assets/kneo_assets/bg.png');
+					game.load.image('PIC_MEM', 'assets/kneo_assets/mem.png');
+					game.load.image('PIC_TRIES', 'assets/kneo_assets/tries.png');
+					game.load.image('PIC_DASH', 'assets/kneo_assets/dash.png');
+					
+					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
+					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+					
+					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
+					
+					
+					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);					
+					
+					game.load.spritesheet('PIC_DIG_FONT', 'assets/kneo_assets/red_numbers.png', 33, 26);
+					game.load.spritesheet('PIC_WHITE_FONT', 'assets/kneo_assets/white_numbers.png', 30, 23);
+					
+					game.load.image('PIC_PRESTART', 'assets/PreStartPanelClean.png');
+	
+					game.load.spritesheet('PIC_KNEO_CARDS', 'assets/kneo_assets/cards.png', 210, 276);					
+					
+					
+					game.load.atlasXML('PIC_GENRE_ICONS', 'assets/GenreSideSymbol.png', 'assets/GenreSideSymbol.xml');
+					game.load.spritesheet('PIC_SCORE_FLAG', 'assets/ScoreFlag.png', 54,147);					
+					game.load.atlasXML('PIC_CARD_ELEMS', 'assets/FaceElements.png', 'assets/FaceElements.xml');
+					
+					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
+					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');					
+					
+					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');		
+				   
+				}
+
+				var gamePhase=0;//0 - до старта, 1 - ждём 1го клика, 2 - ждём 2го клика, 3 - пауза, показываем карты, 4 - закрываем карты
+				var cards=[];
+				var cardsGroup=null;
+				
+				var card1=null;//MemoryCard
+				var card2=null;
+				
+				var delayedPhase=0;
+				var phaseTimer=null;
+				var phaseTimerRepeatCount=0;
+				var phaseTimerDelay=100;				
+				var roundNum=0;
+				var foundNum=0;
+				
+				var quickestFindRounds = [6, 7, 9, 10, 12, 13, 15];
+		
+				var notesSprites=[]; 
+				
+				var totScr=0;
+				
+				var informers=[];
+				var preStartPage = null;
+				
+				var scrScrn = null;
+				
+				
+				
+				var subRoundNum = 0;
+				var maxRounds = 4;
+				var cardByRounds = [6, 8, 12, 16];
+				var thisRoundCards = 0;
+				var totalMemCards = 8;
+				
+				var mrDig = null;
+				var trDig = null;
+				
+				//var fpsInformer;
+				var fx;				
+				// THE GAME HAS BEEN CREATED
+				function create() {
+
+					//Sounds init
+					{
+					fx = game.add.audio('sfx');
+					fx.override = true;//??? зачем это?
+					fx.addMarker('SND_QUESTION1', 0, 0.39);
+					fx.addMarker('SND_QUESTION2', 0.42, 0.39);
+					fx.addMarker('SND_QUESTION3', 0.85, 0.39);
+					fx.addMarker('SND_QUESTION4', 1.272, 0.349);
+					fx.addMarker('SND_POP1', 1.666, 0.079);
+					fx.addMarker('SND_POP2', 1.798, 0.075);
+					fx.addMarker('SND_POP3', 1.886, 0.046);
+					fx.addMarker('SND_LVL_START1', 1.931, 3.469);
+					fx.addMarker('SND_LEVEL_FINISHED1', 5.4, 4.582);
+					fx.addMarker('SND_ERROR1', 9.982, 0.836);
+					fx.addMarker('SND_ERROR2', 10.819, 1.033);
+					fx.addMarker('SND_ERROR3', 11.852, 0.738);
+					fx.addMarker('SND_DIAL_NUM_00', 12.590, 0.287);
+					fx.addMarker('SND_DIAL_NUM_01', 12.877, 0.287);
+					fx.addMarker('SND_DIAL_NUM_02', 13.184, 0.294);
+					fx.addMarker('SND_DIAL_NUM_03', 13.478, 0.287);
+					fx.addMarker('SND_DIAL_NUM_04', 13.766, 0.287);
+					fx.addMarker('SND_DIAL_NUM_05', 14.054, 0.287);
+					fx.addMarker('SND_DIAL_NUM_06', 14.340, 0.287);
+					fx.addMarker('SND_DIAL_NUM_07', 14.627, 0.313);
+					fx.addMarker('SND_DIAL_NUM_08', 14.941, 0.287);
+					fx.addMarker('SND_DIAL_NUM_09', 15.228, 0.287);
+					fx.addMarker('SND_BTN_DOWN1', 15.516, 0.102);
+					fx.addMarker('SND_BTN_DOWN2', 15.668, 0.096);
+					fx.addMarker('SND_BTN_DOWN3', 15.814, 0.134);
+					
+					fx.addMarker('SND_NOTE_A0', 15.998, 1.326);
+					fx.addMarker('SND_NOTE_A1', 17.424, 1.290);
+					fx.addMarker('SND_NOTE_A2', 18.714, 1.255);
+					fx.addMarker('SND_NOTE_A3', 19.969, 1.219);
+					fx.addMarker('SND_NOTE_A4', 21.188, 1.169);
+					fx.addMarker('SND_NOTE_A5', 22.357, 1.219);
+					fx.addMarker('SND_NOTE_A6', 23.576, 0.955);
+					
+					fx.addMarker('SND_SUCCESS1', 24.532, 1.776);
+					fx.addMarker('SND_SUCCESS2', 26.308, 1.649);
+					fx.addMarker('SND_SUCCESS3', 27.957, 1.882);					
+					
+					fx.addMarker('SND_CARD_OPEN1', 29.839, 0.222);
+					fx.addMarker('SND_CARD_OPEN2', 30.060, 0.318);
+					fx.addMarker('SND_CARD_OPEN3', 30.378, 0.236);
+					
+					fx.addMarker('SND_CARD_CLOSE1', 30.615, 0.252);
+					fx.addMarker('SND_CARD_CLOSE2', 30.867, 0.227);
+					fx.addMarker('SND_CARD_CLOSE3', 31.093, 0.227);
+					}
+					game.add.sprite(0, 0, 'PIC_BGD');
+					game.add.sprite(698, 32, 'PIC_MEM');
+					game.add.sprite(208, 32, 'PIC_TRIES');
+					game.add.sprite(472, 42, 'PIC_DASH');
+					
+					mrDig = game.add.sprite(502, 42, 'PIC_WHITE_FONT',9-maxRounds);
+					trDig = game.add.sprite(442, 42, 'PIC_WHITE_FONT',9-subRoundNum);
+					
+					
+					//console.log('create');
+				//	//lvlCap = game.add.text(320, 40, 'Memory cards',{fill:"#482f11", font:"36px Arial", align: "center"});
+				//	
+					
+					cards = [];
+					cardsGroup = game.add.group();
+					for (var i = 0; i < 28; i++) {
+						var crd = new MemoryCard(game);
+						crd.init(125 + (i % 5) * 98, 143 + Math.floor(i / 5) * 122);
+						cards.push(crd);
+						cardsGroup.add(crd.content);
+						
+						crd.bgd.inputEnabled = true;
+						crd.bgd.input.start(0, true);
+						crd.bgd.input.useHandCursor = true;
+						crd.bgd.events.onInputDown.add(onClick, crd);
+					}
+					
+					phaseTimer=game.time.create(false);
+					phaseTimerRepeatCount=1;
+					phaseTimerDelay=100;
+				
+					preStartPage=new PreStartPage(game,startClick);
+					preStartPage.init('How observant are you? Memorize the observation and memory skills by flipping cards to find pairs.');
+					
+				//	this.game.add.sprite(60,0,'PIC_DIG_FONT',9);
+					scrScrn = new ScoreScreen(game, resetMinigame);
+					scrScrn.init();
+					//console.log('WWW');
+					var inf=new Infr(game);
+					inf.init(820, 52);
+					informers.push(inf);
+					
+					var inf=new Infr(game);
+					inf.init(113, 52);
+					informers.push(inf);
+					
+					var inf=new Infr(game);
+					inf.init(6000, 300);
+					informers.push(inf);
+					Init();
+					//fpsInformer = game.add.text(50,50,'FPS');
+					this.game.time.advancedTiming = true;
+
+				}
+
+				
+				function onPhaseTimerComplete() 
+				{
+					setGamePhase(delayedPhase);
+				}
+				
+				function InitSubRound() {
+					//console.log('InitSubRound');
+					cardsGroup.alpha = 0;
+					subRoundNum++;
+					trDig.frame = 9-subRoundNum;
+					var x0 = 85;
+					var y0 = 115;
+					var dx = 0;
+					var dy = 0;
+					var scl = 1;
+					var nx = 1;
+					var ny = 1;
+					var cw = 210;
+					var ch = 276;
+					var maxW = 830;
+					var maxH = 590;
+					switch (subRoundNum){
+						case 1:{
+							nx = 3;
+							ny = 2;
+							break;
+						}
+						case 2:{
+							nx = 4;
+							ny = 2;
+							break;
+						}
+						case 3:{
+							nx = 4;
+							ny = 3;
+							break;
+						}
+						case 4:{
+							nx = 4;
+							ny = 4;
+							break;
+						}
+					}
+					var totW = (nx)*(cw+3);
+					var sclX = maxW/totW ;
+					
+					var totH = (ny)*(ch+3);
+					var sclY = maxH/totH;
+					//console.log(totW+' '+totH+' '+sclX+' '+sclY);
+					scl = Math.min(sclX, sclY);
+					
+					totW *= scl;
+					totH *= scl;
+					//console.log(maxW+' '+totW+' '+maxH+' '+totH);
+					x0 = x0 + (maxW-totW)/2;
+					y0 = y0 + (maxH-totH)/2;
+					
+					thisRoundCards = nx*ny;
+					
+					//console.log(totW+' '+totH+' '+sclX+' '+sclY+' '+scl+' '+x0+' '+y0+' '+nx+' '+ny);
+					
+					for (i=thisRoundCards; i<cards.length; i++){
+						cards[i].content.visible = false;					
+					}			
+					
+					for (var i=0; i<nx; i++){
+						for (var j=0; j<ny; j++){
+							var crd = cards[i*ny+j];
+							crd.setCoordsAndScale(x0 + (i+0.5)*(cw*scl+3),y0 + (j+0.5)*(ch*scl+3),scl);
+							crd.content.visible = true;	
+						}
+					}
+					setGamePhase(0);
+					
+					var twn = game.add.tween(cardsGroup);
+					twn.to({alpha:1},5000);
+					twn.start();
+					if (subRoundNum>1){
+						setGamePhase(1);
+					}
+				}
+				
+				function Init() {
+					//console.log('Init');
+
+					totScr = 0;
+				
+					informers[0].reset('memory',false,200, 61);					
+					informers[1].reset('tries',false,12, 61);
+					informers[2].reset('pairs',true,7, 61);					
+				//	showNumbersTimer.stop();
+				//	delayTimer.stop();
+					playSound('SND_LVL_START1');
+					
+					subRoundNum = 0;
+					InitSubRound();
+					
+					preStartPage.show();
+				}
+				
+				function resetMinigame() {
+					//console.log('resetMinigame');
+					scrScrn.hide();
+					Init();
+				}
+				
+				
+				function onClick(item, pointer) {
+					if ((gamePhase == 1) || (gamePhase == 2)) {						
+						var crd = item.owner;
+						if (crd.isClosed) {
+							crd.open();
+							playSound('SND_CARD_OPEN',3);
+							if (gamePhase == 1) {
+								card1 = crd;
+								setGamePhase(2);
+							}
+							else {
+								delayedSetGamePhase(3, 250);
+								card2 = crd;
+							}
+						}						
+					}
+				}				
+				
+				function delayedSetGamePhase(ph, dt) 
+				{
+					delayedPhase = ph;
+					phaseTimerDelay = dt;
+					phaseTimer.add(phaseTimerDelay,onPhaseTimerComplete, this);
+					phaseTimer.start();
+				}				
+				
+				function setGamePhase(ph) {
+					gamePhase=ph;
+					switch (ph){
+						case 0:{
+							resetCards();
+							roundNum = 0;
+							foundNum = 0;
+							card1 = null;
+							card2 = null;
+							break;
+						}
+						case 1:{
+							roundNum++;
+							setScore(1,roundNum);				
+							break;
+						}
+						case 2:{
+							break;
+						}						
+						case 3:{
+						
+							if (card1.faceId == card2.faceId) {
+								
+								foundNum++;
+								setScore(2,foundNum);	
+								
+								//SCORE:
+								var bestRound = quickestFindRounds[foundNum - 1];
+							//	trace(foundNum, bestRound, roundNum);
+								if (bestRound >= roundNum) {
+									var scr = 30;
+								}
+								else {
+									scr = Math.floor(90 / (3+roundNum - bestRound));
+								}
+							//	trace('score:', scr);
+								setScore(0,scr,true);	
+								
+								card1.showCorrect();
+								card2.showCorrect();
+								
+								card1 = null;
+								card2 = null;
+								
+							
+								if (foundNum == Math.floor(thisRoundCards/2)) {
+									//dispatchEvent(new ScoreEvent(ScoreEvent.GAME_END));
+									//console.log(subRoundNum);
+									//console.log(maxRounds);
+									if (subRoundNum < maxRounds){
+										delayedSetGamePhase(6, 250);//	InitSubRound();									
+									}
+									else{
+										totScr=informers[0].score;
+										game.onScore.dispatch(totScr);
+										scrScrn.show(totScr);
+										playSound('SND_LEVEL_FINISHED1');
+										setGamePhase(5);
+									}
+								}
+								else {
+									delayedSetGamePhase(4, 300);
+								}
+								playSound('SND_SUCCESS',3);
+							}
+							else {
+								delayedSetGamePhase(4, 1500);								
+							}
+							
+							
+							break;
+						}						
+						case 4:{
+							if (card1) {
+								card1.close();
+								playSound('SND_CARD_CLOSE',3);
+							}
+							if (card2) {
+								card2.close();
+							}							
+							delayedSetGamePhase(1, 300);
+							break;
+						}						
+						case 5:{
+							break;
+						}
+						case 6:{
+							InitSubRound();	
+							break;
+						}
+					}
+				}
+				
+				function resetCards() 
+				{
+					var idsAr=[];
+					for (var i = 0; i < thisRoundCards; i++) {
+						idsAr.push(0);
+					}
+					for (i = 0; i < thisRoundCards; i += 2) {
+						var need1More = true;
+						while (need1More) {
+							need1More = false;
+							var r = Math.floor(Math.random() * totalMemCards);
+							for (var j = 0; j < i; j += 2) {
+								if (r == idsAr[j]) {
+									need1More = true;
+									break;
+								}
+							}
+						}
+						idsAr[i] = r;
+						if (i < thisRoundCards-1) {
+							idsAr[i + 1] = r;
+						}				
+					}
+					mashAr(idsAr);
+				
+					//console.log('setting faces');
+					//console.log(idsAr);
+
+					for (i=0; i<cards.length; i++){
+						cards[i].setFace(idsAr[i]);
+					}				
+				}
+				
+				function mashAr(ar) 
+				{
+					var len = ar.length;
+					for (var i = 0; i < len; i++) {
+						var n = i + Math.floor(Math.random() * (len - i));
+						var t = ar[n];
+						ar[n] = ar[i];
+						ar[i] = t;
+					}			
+				}				
+				
+				// THE GAME IS GOING TO BE UPDATED
+				function update() {	
+					
+					
+	    		}
+					
+				function render() {
+					//fpsInformer.setText("FPS: " + this.game.time.fps);
+	    		}
+
+				
+				function startClick(button) {
+					preStartPage.hide();
+					playSound('SND_BTN_DOWN',3);
+					setGamePhase(1);				
+				}
+				
+				function playSound(pref,vars) {
+				//	console.log('playSound '+pref);
+				//	console.log(vars);
+
+					if (vars){
+						var r=1;
+						if (vars>1){
+							r = Math.floor(Math.random()*vars)+1;
+						}	
+						fx.play(pref+r);
+					}
+					else{
+						fx.play(pref)
+					}					
+				}	
+				
+				function setScore(infId, scr, add)
+				{
+				//	console.log('setScrore '+scr+' '+infId+' '+add);
+					if (add){
+						informers[infId].addScore(scr);
+					}
+					else{
+						informers[infId].showScore(scr);
+					}
+				}
+				
+				game.on('score', function() {
+					console.log('@@@@@@@@@@@@@@@@on score', arguments);
+				});				
+				
+				
+	    		};
+		</script>
+    </head>
+    <body>
+    </body>
+</html>
+
+
+
+
+

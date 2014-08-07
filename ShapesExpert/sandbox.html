@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="js/phaser.min.js"></script>
+	<style>
+    			body{margin:0}
+    		</style>
+    		<script type="text/javascript">
+			window.onload = function() {
+				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '', {preload: preload, create: create, update: update, render:render});
+				function preload() {
+					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/ButtonBase4HTML5.png', 163, 65);
+				}
+				var btn1=null;
+				var btn2=null;
+				
+				var tm = null;
+				function create() {
+					btn1 = game.add.button(100,100,'PIC_BIG_BTN_BASE',btn1Down,this,1,0,2,0);
+					btn2 = game.add.button(200,100,'PIC_BIG_BTN_BASE',btn2Down,this,1,0,2,0);
+					
+					btn1.input.useHandCursor = true;
+					
+					tm = game.time.create(false);
+					tm.repeat(1000,20,onTM,this);
+				}
+				function update() {				
+	    		}
+				function render() {
+	    		}
+				function btn1Down(a,b,c) {//button, pointer, true
+				//	console.log(a);
+				//	console.log(b);
+				//	console.log(c);
+					tm.start();
+	    		}				
+				function btn2Down() {
+					tm.stop();
+	    		}					
+				
+				function onTM() {
+					//console.log(Date.now());
+	    		}				
+				
+			}
+			</script>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+
+</body>
+</html>
