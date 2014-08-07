@@ -2,282 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ed51ff1-3b67-4328-bc87-665ef128600e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0071 MemCards/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0072 Silhouettes/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0073 Starfall/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0074 Counter/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0075 Sniper/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0076 ShapesExpert/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0077 Melody/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0078 Pathfinder/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0079 Tower/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0080 Mosaic/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0081 NumbersTriangle/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0082 PerfectShapes/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0083 Cleaner/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0084 Surveilance/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0085 Compass/assets/kneo_assets/loader.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0071 MemCards/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0072 Silhouettes/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0073 Starfall/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0074 Counter/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0075 Sniper/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0076 ShapesExpert/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0077 Melody/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0078 Pathfinder/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0079 Tower/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0080 Mosaic/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0081 NumbersTriangle/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0082 PerfectShapes/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0083 Cleaner/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0084 Surveilance/assets/kneo_assets/loaderBg.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0085 Compass/assets/kneo_assets/loaderBg.png" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\HTML5FD.fdproj" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\Art.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\BackGround.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\ButtonBase4HTML5.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\ButtonCaption4HTML5.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\GenreSideSymbol.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\GenreSideSymbol.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\GenreSideSymbol.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\LevelComplStatic.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\PaintSublayer.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\PreStartPanelClean.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\RestartButton.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\ScoreFlag.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\art.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\art.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\artGeom.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\audio\ALL_SND.mp3" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\fonts\blue_white_str.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\fonts\blue_white_str.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\fonts\chess_small.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\fonts\chess_small.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\fonts\font.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\fonts\font.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\fonts\project2.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\fonts\project2.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\bg.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\button_x.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\buttons.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\chessboard1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\good_bad.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\kid.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\login_button.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\popup_full_1.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\squere.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\kneo_assets\start.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\paint.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\assets\paint.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\index.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\AimingLine.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\CircleWithCentre.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\CircularTimeInformer.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\CountShapeButton.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\DroppingBlockFragment.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\GeomShape.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\GeomTaskView.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\Infr.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\MovedBlock.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\PreStartPage.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\RemoveableSquare.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\Routines.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\ScoreScreen.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\Target.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\TriangleSector.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Chessboard\js\phaser.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\HTML5FD.fdproj" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\Art.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\BackGround.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\ButtonBase4HTML5.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\ButtonCaption4HTML5.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\GenreSideSymbol.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\GenreSideSymbol.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\GenreSideSymbol.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\LevelComplStatic.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\PaintSublayer.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\PreStartPanelClean.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\RestartButton.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\ScoreFlag.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\art.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\art.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\artGeom.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\audio\ALL_SND.mp3" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\fonts\font.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\fonts\font.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\fonts\project2.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\fonts\project2.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\arrow.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\bg.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\button_x.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\compass.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\compass1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\kid.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\line.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\login_button.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\popup_full_1.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\project2.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\project2.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\start.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\kneo_assets\target.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\paint.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\assets\paint.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\index.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\AimingLine.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\CircleWithCentre.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\CircularTimeInformer.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\CountShapeButton.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\DroppingBlockFragment.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\GeomShape.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\GeomTaskView.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\Infr.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\MovedBlock.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\PreStartPage.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\RemoveableSquare.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\Routines.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\ScoreScreen.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\Target.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\TriangleSector.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Compass\js\phaser.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\HTML5FD.fdproj" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\WorldDragShapes2Holes.as" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\WorldDragSquares.as" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\ArrowsArt.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\Art.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\BackGround.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\ButtonBase4HTML5.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\ButtonCaption4HTML5.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\GenreSideSymbol.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\GenreSideSymbol.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\GenreSideSymbol.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\LevelComplStatic.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\PaintSublayer.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\PreStartPanelClean.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\RestartButton.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\ScoreFlag.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\art.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\art.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\artGeom.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\audio\ALL_SND.mp3" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\fonts\font.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\fonts\font.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\fonts\sorter font.ltr" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\fonts\sorter_font.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\fonts\sorter_font.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\Sorter-background.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\Sorter-holes.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\Sorter-numbers.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\Sorter-shapes.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\button_x.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\guess_results.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\kid.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\login_button.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\popup_full_1.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\shapes.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\kneo_assets\start.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\paint.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\paint.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\assets\shapesHoles.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\index.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\AimingLine.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\CircleWithCentre.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\CircularTimeInformer.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\CountShapeButton.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\DroppingBlockFragment.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\GeomShape.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\GeomTaskView.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\Infr.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\Infr0.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\MovedBlock.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\PreStartPage.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\RemoveableSquare.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\Routines.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\ScoreScreen.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\Target.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\TriangleSector.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\js\phaser.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Sorter\world_drag_shapes_2holes\GeomHole.as" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\HTML5FD.fdproj" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\Art.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\BackGround.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\ButtonBase4HTML5.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\ButtonCaption4HTML5.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\GenreSideSymbol.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\GenreSideSymbol.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\GenreSideSymbol.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\LevelComplStatic.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\PhaseCommand.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\PreStartPanelClean.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\RestartButton.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\ScoreFlag.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\Shapes.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\Shapes.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\art.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\art.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\artGeom.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\artGeom.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\audio\ALL_SND.mp3" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\36 px.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\60px.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\72 px.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\project.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\project.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\sf18px.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\sf18px.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\sf30px.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\sf30px.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\sf36px.fnt" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\sf36px.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\surveilance font 18px.ltr" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\surveilance font 30px.ltr" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\fonts\surveilance font 36px.ltr" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\Icons\attention.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\Icons\errors.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\Icons\pointer.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\Icons\round.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\bg-upd.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\bg.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\button_x.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\guess_results.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\kid.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\login_button.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\numbers.psd" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\popup_full_1.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\shapes.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\start.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\kneo_assets\surveilance.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\movedObjectMark.json" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\assets\movedObjectMark.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\index.html" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\CircleWithCentre.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\CountShapeButton.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\DroppingBlockFragment.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\FollowObjectMark.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\GeomShape.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\GeomTaskView.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\Infr.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\MovedBlock.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\MovingObject.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\NoteButton.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\PreStartPage.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\Routines.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\ScoreScreen.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\xampp\htdocs\git\games\kneo-minigames\Surveilance\js\phaser.min.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0073 Starfall/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0073 Starfall/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0070 Dialer/index.html" afterPath="$PROJECT_DIR$/0070 Dialer/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0071 MemCards/index.html" afterPath="$PROJECT_DIR$/0071 MemCards/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0072 Silhouettes/index.html" afterPath="$PROJECT_DIR$/0072 Silhouettes/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0073 Starfall/index.html" afterPath="$PROJECT_DIR$/0073 Starfall/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0074 Counter/index.html" afterPath="$PROJECT_DIR$/0074 Counter/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0075 Sniper/index.html" afterPath="$PROJECT_DIR$/0075 Sniper/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0076 ShapesExpert/index.html" afterPath="$PROJECT_DIR$/0076 ShapesExpert/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0077 Melody/index.html" afterPath="$PROJECT_DIR$/0077 Melody/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0078 Pathfinder/index.html" afterPath="$PROJECT_DIR$/0078 Pathfinder/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0079 Tower/index.html" afterPath="$PROJECT_DIR$/0079 Tower/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0080 Mosaic/index.html" afterPath="$PROJECT_DIR$/0080 Mosaic/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0081 NumbersTriangle/index.html" afterPath="$PROJECT_DIR$/0081 NumbersTriangle/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0082 PerfectShapes/index.html" afterPath="$PROJECT_DIR$/0082 PerfectShapes/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0083 Cleaner/index.html" afterPath="$PROJECT_DIR$/0083 Cleaner/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0086 Chessboard/assets/kneo_assets/loader.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0087 Sorter/assets/kneo_assets/loader.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0086 Chessboard/assets/kneo_assets/loaderBg.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/0087 Sorter/assets/kneo_assets/loaderBg.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0085 Compass/index.html" afterPath="$PROJECT_DIR$/0085 Compass/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0086 Chessboard/index.html" afterPath="$PROJECT_DIR$/0086 Chessboard/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0087 Sorter/index.html" afterPath="$PROJECT_DIR$/0087 Sorter/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="kneo-minigames.iws" />
@@ -302,20 +34,10 @@
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/0084 Surveilance/index.html">
+        <entry file="file://$PROJECT_DIR$/0087 Sorter/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.6726907" vertical-offset="0" max-vertical-offset="11645">
-              <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/0085 Compass/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-47.076923" vertical-offset="0" max-vertical-offset="8262">
-              <caret line="72" column="16" selection-start-line="72" selection-start-column="16" selection-end-line="72" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.20156556" vertical-offset="9213" max-vertical-offset="9843">
+              <caret line="548" column="17" selection-start-line="548" selection-start-column="17" selection-end-line="548" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -350,11 +72,8 @@
         <option value="$PROJECT_DIR$/Cleaner/js/ScoreScreen.js" />
         <option value="$PROJECT_DIR$/dialing/index.html" />
         <option value="$PROJECT_DIR$/0084 Surveilance/js/ScoreScreen.js" />
-        <option value="$PROJECT_DIR$/0085 Compass/index.html" />
         <option value="$PROJECT_DIR$/0085 Compass/js/ScoreScreen.js" />
-        <option value="$PROJECT_DIR$/0086 Chessboard/index.html" />
         <option value="$PROJECT_DIR$/0086 Chessboard/js/ScoreScreen.js" />
-        <option value="$PROJECT_DIR$/0087 Sorter/index.html" />
         <option value="$PROJECT_DIR$/0087 Sorter/js/ScoreScreen.js" />
         <option value="$PROJECT_DIR$/0070 Dialer/index.html" />
         <option value="$PROJECT_DIR$/0071 MemCards/index.html" />
@@ -371,6 +90,10 @@
         <option value="$PROJECT_DIR$/0082 PerfectShapes/index.html" />
         <option value="$PROJECT_DIR$/0083 Cleaner/index.html" />
         <option value="$PROJECT_DIR$/0084 Surveilance/index.html" />
+        <option value="$PROJECT_DIR$/0085 Compass/index.html" />
+        <option value="$PROJECT_DIR$/0086 Chessboard/index.html" />
+        <option value="$PROJECT_DIR$/0087 Sorter/index.html" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -425,52 +148,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kneo-minigames" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kneo-minigames" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="0087 Sorter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kneo-minigames" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kneo-minigames" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="0087 Sorter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kneo-minigames" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kneo-minigames" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="0085 Compass" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -481,11 +158,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\git\games\kneo-minigames\0087 Sorter\assets\kneo_assets" />
+      <recent name="C:\xampp\htdocs\git\games\kneo-minigames\0086 Chessboard\assets\kneo_assets" />
       <recent name="C:\xampp\htdocs\git\games\kneo-minigames\0085 Compass\assets\kneo_assets" />
       <recent name="C:\xampp\htdocs\git\games\kneo-minigames\0084 Surveilance\assets\kneo_assets" />
       <recent name="C:\xampp\htdocs\git\games\kneo-minigames\0083 Cleaner\assets\kneo_assets" />
-      <recent name="C:\xampp\htdocs\git\games\kneo-minigames\0082 PerfectShapes\assets\kneo_assets" />
-      <recent name="C:\xampp\htdocs\git\games\kneo-minigames\0081 NumbersTriangle\assets\kneo_assets" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\xampp\htdocs\git\games\kneo-minigames\dialing\assets\kneo_assets" />
@@ -545,7 +222,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="718" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="718" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -603,14 +280,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0086 Chessboard/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334" vertical-offset="6838" max-vertical-offset="8772">
-          <caret line="412" column="27" selection-start-line="412" selection-start-column="20" selection-end-line="412" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/0085 Compass/js/ScoreScreen.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5747331" vertical-offset="765" max-vertical-offset="1411">
@@ -623,14 +292,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.57651246" vertical-offset="781" max-vertical-offset="1411">
           <caret line="65" column="68" selection-start-line="65" selection-start-column="68" selection-end-line="65" selection-end-column="68" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/0087 Sorter/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7476099" vertical-offset="714" max-vertical-offset="9537">
-          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -760,18 +421,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0085 Compass/index.html">
+    <entry file="file://$PROJECT_DIR$/0084 Surveilance/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-47.076923" vertical-offset="0" max-vertical-offset="8262">
-          <caret line="72" column="16" selection-start-line="72" selection-start-column="16" selection-end-line="72" selection-end-column="16" />
+        <state vertical-scroll-proportion="-3.0980392" vertical-offset="10994" max-vertical-offset="11645">
+          <caret line="656" column="0" selection-start-line="656" selection-start-column="0" selection-end-line="668" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0084 Surveilance/index.html">
+    <entry file="file://$PROJECT_DIR$/0085 Compass/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.6726907" vertical-offset="0" max-vertical-offset="11645">
-          <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+        <state vertical-scroll-proportion="-3.6666667" vertical-offset="1122" max-vertical-offset="8568">
+          <caret line="77" column="46" selection-start-line="21" selection-start-column="16" selection-end-line="77" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0086 Chessboard/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.0980392" vertical-offset="8444" max-vertical-offset="9095">
+          <caret line="506" column="0" selection-start-line="506" selection-start-column="0" selection-end-line="518" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="562">
+          <caret line="0" column="5" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0087 Sorter/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.20156556" vertical-offset="9213" max-vertical-offset="9843">
+          <caret line="548" column="17" selection-start-line="548" selection-start-column="17" selection-end-line="548" selection-end-column="17" />
           <folding />
         </state>
       </provider>
