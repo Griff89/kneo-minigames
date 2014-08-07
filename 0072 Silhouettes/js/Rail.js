@@ -27,6 +27,12 @@ Rail.prototype = {
 	fun2: function () {
 		////console.log('Rail f2 ');
 	},
+	reset: function () {
+		for (var i=0; i<this.maxTokens; i++){
+			this.tokens[i].isOutOfScreen = true;
+			this.tokens[i].back2Pool();
+		}
+	},
 	init: function (id,ay) {
 		////console.log('Rail init '+ay);
 		this.arId  = id;

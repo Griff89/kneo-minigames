@@ -4,7 +4,6 @@
     		<script src="js/phaser.min.js"></script>
     		<script src="js/Infr.js"></script>
 			<script src="js/ScoreScreen.js"></script>
-			<script src="js/MemoryCard.js"></script>
 			<script src="js/Rail.js"></script>
 			<script src="js/SearchedToken.js"></script>
 			<script src="js/SearchTask.js"></script>
@@ -253,17 +252,8 @@
 					
 					levelTask = new SearchTask(game);
 					levelTask.init();
-				
-
 					
 					backPhaseTimer = game.time.create(false);
-					
-					preStartPage=new PreStartPage(game, startClick);
-					preStartPage.init("Click the shapes\nyou'll be asked");
-
-					
-					scrScrn = new ScoreScreen(game, resetMinigame);
-					scrScrn.init();
 
 					var inf=new Infr(game, playSound);
 					inf.init(560, 80);
@@ -272,6 +262,13 @@
 					var inf=new Infr(game, playSound);
 					inf.init(730, 80);
 					informers.push(inf);
+					
+					preStartPage=new PreStartPage(game, startClick);
+					preStartPage.init("Click the shapes\nyou'll be asked");
+
+					
+					scrScrn = new ScoreScreen(game, resetMinigame);
+					scrScrn.init();	
 					
 					Init();
 					game.input.onDown.add(onGameDown, this);
@@ -344,6 +341,15 @@
 					
 					informers[1].reset('wrong',true,3, 125);	
 				
+					corNum = 0;
+					wrongNum = 0;
+					
+					var len = rails.length;
+					for (var i=0; i<len; i++){
+						rails[i].reset();
+					}
+					
+					
 					////console.loge.log('Init');
 					roundNum = 0;
 					
