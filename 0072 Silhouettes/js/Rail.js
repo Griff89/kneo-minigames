@@ -32,6 +32,9 @@ Rail.prototype = {
 			this.tokens[i].isOutOfScreen = true;
 			this.tokens[i].back2Pool();
 		}
+		this.mostRightToken = null;
+		this.mostRightTokenTravelled = 0;
+		
 	},
 	init: function (id,ay) {
 		////console.log('Rail init '+ay);
