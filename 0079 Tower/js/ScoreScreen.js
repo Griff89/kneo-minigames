@@ -62,9 +62,7 @@ ScoreScreen.prototype = {
 		this.scrTxt.setText('Your score: '+scr.toFixed(0));
 		this.content.visible = true;
 
-        if (parent.window.kw && parent.window.app && parent.window.app.getMediator) {
-            parent.window.app.getMediator().trigger('onSetScore', 79, +scr.toFixed(0));
-        }
+        setGameProgress(PLAYER_ID, +scr);
 	},
 	
 	hide: function () {
