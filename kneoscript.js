@@ -4,7 +4,9 @@
 
         this.setGameProgress = function(player_id, progress, cb) {
             this.doAPICall('onLevelUp', progress);
-            cb();
+            if(typeof cb === 'function') {
+                cb();
+            }
         }
         this.increaseGameTime = function(playerId, timeToAdd, cb) {
         }
@@ -12,7 +14,7 @@
         }
 
         this.doAPICall = function(name, progress) {
-            parent.window.app.getMediator().trigger(name, 81, progress);
+            parent.window.app.getMediator().trigger(name, this.GAME_ID, progress);
         }
         return
     }
