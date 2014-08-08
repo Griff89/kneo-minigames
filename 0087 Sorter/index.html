@@ -11,9 +11,7 @@
     		<script src="js/Infr.js"></script>
 			<script src="js/ScoreScreen.js"></script>
 			<script src="js/PreStartPage.js"></script>
-			
-			<script src="js/AimingLine.js"></script>
-			<script src="js/Target.js"></script>
+
 
     		<style>
     			body{margin:0}
@@ -54,8 +52,8 @@
 
                         game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);
 
-                        game.load.spritesheet('PIC_SHAPES', 'assets/kneo_assets/Sorter-shapes.png', 136, 160);
-                        game.load.spritesheet('PIC_HOLES', 'assets/kneo_assets/Sorter-holes.png', 178, 175);
+                        game.load.spritesheet('PIC_SHAPES', 'assets/kneo_assets/Sorter-shapes.png', 148, 148);
+                        game.load.spritesheet('PIC_HOLES', 'assets/kneo_assets/Sorter-holes.png', 162, 162);
                         game.load.spritesheet('PIC_YESNO', 'assets/kneo_assets/guess_results.png', 77, 78);
 
 
@@ -342,11 +340,15 @@
 					shp.y = 375;
 					
 					var sid = Math.floor(5 * Math.random());
-					var cid = Math.floor(5 * Math.random());
+					var cid = Math.floor(7 * Math.random());
+					
+					
 					
 					shp.frame = cid*5+sid;
 					shp.shapeId = sid;
 
+
+					
 					shp.rotation = 0;
 					shp.alpha = 0;
 					
@@ -399,9 +401,13 @@
 				{
 					if (isDragging) {
 						var hl = findClosestHole();
+						
 					
 						if (hl.shapeId == shp.shapeId) {
 							var d = Routines.prototype.GetDistanceBetween(shp.x, shp.y, hl.x, hl.y);
+							
+							console.log('distance '+d);
+							
 							var dt = Date.now() - tm0;
 							
 						//	shp.alphaHide();
