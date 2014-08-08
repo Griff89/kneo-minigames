@@ -7,8 +7,6 @@ PreStartPage = function(game, startCb) {
 	this.game = game;
 	this.content = null;
 	this.startCallback = startCb;
-	
-	
 }
 
 PreStartPage.prototype = {

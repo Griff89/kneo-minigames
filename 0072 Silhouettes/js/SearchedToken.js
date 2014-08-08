@@ -15,6 +15,8 @@ SearchedToken = function(game) {
 	this.isOutOfScreen = true;
 	this.arId = 0;
 	this.rotSpeed=0;
+	
+	this.lineY = 0;
 }
 
 SearchedToken.prototype = {
@@ -96,6 +98,7 @@ SearchedToken.prototype = {
 			this.content.x = 1000+60;
 		}
 		
+		this.lineY = ay;
 		this.content.y = 0;//ay;
 		
 		this.rotSpeed = Math.random()*0.04 - 0.02;

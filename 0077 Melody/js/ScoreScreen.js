@@ -39,7 +39,8 @@ ScoreScreen.prototype = {
 		//console.log()
 		this.scrTxt.text = 'Your score: '+scr;
 		this.content.visible = true;
-        setGameScore(PLAYER_ID, +scr);
+        this.game.world.bringToTop(this.content);
+		setGameScore(PLAYER_ID, +scr);
 	},
 	
 	hide: function () {

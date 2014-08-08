@@ -17,6 +17,8 @@ ScoreScreen.prototype = {
 		
 		this.bgd = this.game.add.sprite(0,0,'PIC_BGD');
 		this.bgd.alpha = 0.8;
+		this.bgd.inputEnabled = true;	
+		
 		this.capSpr = this.game.add.sprite(320,60,'PIC_LVL_END');
 		this.scrTxt=this.game.add.text(233,100,'Your score:',{fill:"#ffffff", font:"36px Arial", align: "left"});
 		this.resBtn=this.game.add.button(320,377,'PIC_RESTART_BTN',this.resFn,this,1,0,2);
@@ -40,7 +42,8 @@ ScoreScreen.prototype = {
 		this.scrTxt.text = 'Your score: '+scr;
 		this.content.visible = true;
 
-        setGameScore(PLAYER_ID, +scr);
+        this.game.world.bringToTop(this.content);
+		setGameScore(PLAYER_ID, +scr);
 	},
 	
 	hide: function () {

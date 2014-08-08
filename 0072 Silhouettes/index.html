@@ -57,6 +57,7 @@
                         game.load.spritesheet('PIC_BALL_INNER', 'assets/kneo_assets/numbers.png', 72, 51);
                         game.load.spritesheet('PIC_HOLDER_SIDE', 'assets/kneo_assets/holder.png',88,157);
                         game.load.image('PIC_HOLDER_BASE', 'assets/kneo_assets/holder_line.png');
+                        game.load.spritesheet('PIC_YESNO', 'assets/kneo_assets/guess_results.png', 77, 78);
 
                         game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
                         game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');
@@ -96,6 +97,10 @@
 				var maxRails = 1;
 				var speedCoef = 1.0;
 				var probCoef = 0.4;
+				
+				
+				var errSmb = null;
+				var errTwn = null;
 				
 				var backPhaseTimer=null;
 				var backPhaseTimerRepeatCount=0;
@@ -255,6 +260,10 @@
 					//	rl.fun2();
 					}
 					
+					errSmb = game.add.sprite(0,0,'PIC_YESNO',1);
+					errSmb.anchor.setTo(0.5, 0.5);
+					errSmb.visible = false;
+					
 					levelTask = new SearchTask(game);
 					levelTask.init();
 					
@@ -290,6 +299,17 @@
 				
 				function lostTK(tk){
 					if (levelTask.findId == tk.smbId){
+						if (errTwn){errTwn.stop()}
+						errSmb.x = (tk.content.x<500)?40:960;
+						errSmb.y = tk.lineY;
+						errSmb.alpha = 0;
+						errSmb.visible = true;
+						
+						errTwn = game.add.tween(errSmb);
+						errTwn.to({alpha:1},500, null,false, 0, 4);
+						errTwn.onComplete.add(onErrTwnComplete, this);
+						errTwn.start();
+					
 						wrongNum++;
 						setScore(1,wrongNum);
 						playSound('SND_ERROR',3);
@@ -298,6 +318,10 @@
 							endGame();
 						}						
 					}
+				}
+				
+				function onErrTwnComplete(){
+					errSmb.visible = false;
 				}
 				
 				function checkCorrectTK(tk){
