@@ -95,6 +95,7 @@
         var api_url = this.KW_API_ROOT + "/increasetimesplayed.php?player=" + playerId + "&gameId=" + this.GAME_ID;
         this.doAPICall(api_url, cb);
     }
+    this.setGameScore = function(playerId, score, cb){};
     this.doAPICall = function(api_url, cb) {
         if (!this.CONFIGS_LOADED) {
             cb(this.STATUS_NOT_READY);
