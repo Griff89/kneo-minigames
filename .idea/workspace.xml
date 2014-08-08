@@ -2,25 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0ed51ff1-3b67-4328-bc87-665ef128600e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0070 Dialer/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0070 Dialer/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0071 MemCards/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0071 MemCards/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0072 Silhouettes/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0072 Silhouettes/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0073 Starfall/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0073 Starfall/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0074 Counter/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0074 Counter/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0075 Sniper/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0075 Sniper/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0076 ShapesExpert/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0076 ShapesExpert/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0077 Melody/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0077 Melody/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0078 Pathfinder/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0078 Pathfinder/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0079 Tower/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0079 Tower/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0080 Mosaic/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0080 Mosaic/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0081 NumbersTriangle/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0081 NumbersTriangle/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0082 PerfectShapes/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0082 PerfectShapes/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0083 Cleaner/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0083 Cleaner/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0084 Surveilance/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0084 Surveilance/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0085 Compass/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0085 Compass/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0086 Chessboard/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0086 Chessboard/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/0087 Sorter/js/ScoreScreen.js" afterPath="$PROJECT_DIR$/0087 Sorter/js/ScoreScreen.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kneoscript.js" afterPath="$PROJECT_DIR$/kneoscript.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="kneo-minigames.iws" />
@@ -239,8 +220,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="718" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="718" extended-state="6" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
