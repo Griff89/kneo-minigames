@@ -37,7 +37,7 @@ PreStartPage.prototype = {
 		this.btnCap.anchor.setTo(0.5, 0.5);
 		
 		this.explCap = this.game.add.text(375, 124,txt,
-							{fill:"#991e01", font:"40px Arial", align: "center", wordWrap: true, wordWrapWidth: 590}
+							{fill:"#991e01", font:"36px Arial", align: "center", wordWrap: true, wordWrapWidth: 590}
 							,this.content);
 		this.explCap.anchor.setTo(0.5, 0);
 		
