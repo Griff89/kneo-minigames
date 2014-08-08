@@ -2,12 +2,18 @@
     if (parent.window.kw && parent.window.app && parent.window.app.getMediator) {
         this.PLAYER_ID = 1;
 
-        this.setGameProgress = function(player_id, progress, cb) {
-            this.doAPICall('onLevelUp', progress);
+        this.setGameProgress = function(player_id, level, cb) {
+            this.doAPICall('onLevelUp', level);
             if(typeof cb === 'function') {
                 cb();
             }
         }
+        this.setGameScore = function(player_id, score, cb) {
+            this.doAPICall('onSetScore', score);
+            if(typeof cb === 'function') {
+                cb();
+            }
+        };
         this.increaseGameTime = function(playerId, timeToAdd, cb) {
         }
         this.increaseGameTimesPlayed = function(playerId, cb) {
@@ -63,6 +69,9 @@
             alert("player id must be numeric");
             return false;
         }
+        this.setGameScore(this.PLAYER_ID,1, function(responseStatus) {
+            $("#result").append("setGameScore:" + responseStatus + "<br>");
+        });
         this.setGameProgress(this.PLAYER_ID,1, function(responseStatus) {
             $("#result").append("setGameProgress:" + responseStatus + "<br>");
         });

@@ -61,7 +61,7 @@ ScoreScreen.prototype = {
         this.game.add.tween(this.boy).to({x:566},1000, Phaser.Easing.Linear.None, true, 0, 0,false);
 		this.scrTxt.setText('Your score: '+scr.toFixed(0));
 
-        setGameProgress(PLAYER_ID, +scr);
+        setGameScore(PLAYER_ID, +scr);
 	},
 	
 	hide: function () {

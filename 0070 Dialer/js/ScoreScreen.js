@@ -60,7 +60,7 @@ ScoreScreen.prototype = {
 		this.scrTxt.text = 'Your score: '+scr;
 		this.content.visible = true;
 
-        setGameProgress(PLAYER_ID, +scr);
+        setGameScore(PLAYER_ID, +scr);
 	},
 	
 	hide: function () {
