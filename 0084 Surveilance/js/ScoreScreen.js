@@ -61,6 +61,8 @@ ScoreScreen.prototype = {
 		
 		this.scrTxt.setText('Your score: '+scr.toFixed(0));
 		this.content.visible = true;
+		this.game.world.bringToTop(this.content);
+	//	this.content.bringToTop();
 
         setGameScore(PLAYER_ID, +scr);
 	},

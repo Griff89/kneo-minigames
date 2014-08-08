@@ -566,6 +566,11 @@
 				function endGame() {
 					totScr = informers[0].score;
 					scrScrn.show(totScr);
+					console.log('ENDGAME');
+					console.log(scrScrn.content.z);
+					
+					scrScrn.content.bringToTop();
+					console.log(scrScrn.content.z);
 					playSound('SND_LEVEL_FINISHED1');				
 				}
 				
