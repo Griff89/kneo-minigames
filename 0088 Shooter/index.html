@@ -2,15 +2,17 @@
 <html>
 	<head>
     		<script src="js/phaser.min.js"></script>
-            <script src="jquery.min.js"></script>
+			<script src="jquery.min.js"></script>
             <script>
-                window.GAME_ID = 87;
+                window.GAME_ID = 88;
             </script>
-            <script src="../kneoscript.js"></script>
+			<script src="../kneoscript.js"></script>
 			<script src="js/Routines.js"></script>
     		<script src="js/Infr.js"></script>
 			<script src="js/ScoreScreen.js"></script>
 			<script src="js/PreStartPage.js"></script>
+			
+			<script src="js/FallingShape.js"></script>
 
 
     		<style>
@@ -22,8 +24,8 @@
 				// onPreload to be executed when the game preloads
 				// onCreate to be executed once the game is firstly created
 				// onUpdate to be called every time the game us updated
-                var game = new Phaser.Game(1000, 750, Phaser.AUTO, '');
-                this.bootScreen = function() {
+				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '');
+				this.bootScreen = function() {
                     function preload() {
                         game.load.image('LOADER_BG', 'assets/kneo_assets/loaderBg.png');
                         game.load.image('LOADER_BAR', 'assets/kneo_assets/loader.png');
@@ -37,31 +39,33 @@
                         create: create
                     }
                 };
-
-
-                this.loadScreen = function() {
+				
+				
+				this.loadScreen = function() {
                     function preload() {
-                        game.load.image('PIC_BGD', 'assets/kneo_assets/Sorter-background.png');
-                        game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
-                        game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
 
-                        game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
-                        game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');
-
-                        game.load.bitmapFont('PIC_FONT', 'assets/fonts/sorter_font.png', 'assets/fonts/sorter_font.fnt');
-
-                        game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);
-
-                        game.load.spritesheet('PIC_SHAPES', 'assets/kneo_assets/Sorter-shapes.png', 148, 148);
-                        game.load.spritesheet('PIC_HOLES', 'assets/kneo_assets/Sorter-holes.png', 162, 162);
-                        game.load.spritesheet('PIC_YESNO', 'assets/kneo_assets/guess_results.png', 77, 78);
-
-
-                        game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
-                        game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');
-
-                        game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');
-
+				
+					game.load.image('PIC_BGD', 'assets/kneo_assets/shooter_background_new1.png');
+					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png'); 
+					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+					
+					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
+					
+					game.load.bitmapFont('PIC_FONT', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
+					game.load.bitmapFont('PIC_FONT2', 'assets/fonts/project2.png', 'assets/fonts/project2.fnt');
+					
+					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);								
+					
+					game.load.spritesheet('PIC_SHAPES', 'assets/kneo_assets/shooter_figures.png', 140, 141);
+				
+					game.load.image('PIC_CROSSHAIR', 'assets/kneo_assets/aim.png');
+					game.load.spritesheet('PIC_YESNO', 'assets/kneo_assets/guess_results.png',77,78);
+				
+					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
+					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');					
+					
+					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');	
                         // LOADER
                         game.add.sprite(0, 0, 'LOADER_BG');
                         game.load.setPreloadSprite(game.add.sprite(331, 380, 'LOADER_BAR'));
@@ -76,24 +80,19 @@
                         create: create
                     }
                 };
-
-                this.gameScreen = function() {
-
-				var holes = [];
-				var shp = null;
 				
-				var tm0 = 0;
-				var errors = 0;
-				var shownShapes = 0;
+				this.gameScreen = function() {				
 				
-				var phaseId = 0;
+				var balls = [];
+				var plannedFalls = [];
+				var receivedReplies = [];
 				
-				var isDragging = false;
-				var deltaCoords = null;//:Point;
-				var isCountingTime = false;
-				var hasMovedThisFrame = false;			
-				var errSmb = null;
-				var errTwn = null;
+				var fallShapeTimer = null;
+				var fallShapeTimerDelay = 4000;
+				
+				var numHits = 0;
+				var numMiss = 0;
+				var crossHair = null
 				
 				var totScr=0;
 				
@@ -212,74 +211,53 @@
 					
 					fx.addMarker('SND_CLICK1', 48.038, 0.005);
 					fx.addMarker('SND_CLICK2', 48.088, 0.006);
-					fx.addMarker('SND_CLICK3', 48.144, 0.005);
-
+					fx.addMarker('SND_CLICK3', 48.144, 0.005);		
+					
+					fx.addMarker('SND_SHOT_SNIPER1', 48.204, 0.889);
+					
 					}
 					game.add.sprite(0, 0, 'PIC_BGD');
-					
+				//	game.add.sprite(79, 174, 'PIC_LINE');
 					//console.log('create');
 					//lvlCap = game.add.text(320, 40, 'Chessfield',{fill:"#482f11", font:"36px Arial", align: "center"});
 					
+					for (var i = 0; i < 6; i++) {
+						var fs = new FallingShape(game, playSound, onBallFailed);
+						fs.init();
+						fs.geom.inputEnabled = true;
+						fs.geom.input.useHandCursor = true;
+						fs.geom.events.onInputDown.add(onCircleMouseDown, this);
+						
+						
+						balls.push(fs);
+						
+						plannedFalls.push(false);
+						receivedReplies.push(false);
+					}
+					crossHair = game.add.sprite(0,0,'PIC_CROSSHAIR');
+					crossHair.anchor.setTo(0.5);
+					
+					fallShapeTimer = game.time.create(false);//new Timer(4000, 1);
+					//fallShapeTimer.addEventListener(TimerEvent.TIMER_COMPLETE, onFallShapeTimer);
 
-				//	holes = new Array();
-					for (var i = 0; i < 5; i++) {
-						var hl = game.add.sprite(
-										500 + 225 * Math.sin(i * 2 * Math.PI / 5),
-										375 + 225 * Math.cos(i * 2 * Math.PI / 5),
-										'PIC_HOLES', i+10);
-						holes.push(hl);
-						hl.shapeId = i;
-					
-						hl.anchor.setTo(0.5,0.5);
-						hl.animations.add('wrong',[i,i+10,i,i+10,i,i+10]);
-						hl.animations.add('correct',[i+5,i+10]);
-					}					
-					
-					shp = game.add.sprite(500, 375, 'PIC_SHAPES');
-					shp.anchor.setTo(0.5,0.5);
-				
-					shp.x = 500;
-					shp.y = 375;
-					shp.inputEnabled = true;
-					shp.input.useHandCursor = true;
-					shp.events.onInputDown.add(onMouseDown, this);
-					
-					errSmb = game.add.sprite(0,0,'PIC_YESNO',1);
-					errSmb.visible = false;
-					errSmb.anchor.setTo(0.5,0.5);
-					
-					game.input.onUp.add(onMouseUp, this);
-					
-				//	shp.addEventListener("twnComplete", onAlphaTweenComplete);
-					
-					deltaCoords = new Phaser.Point();
-					
 					var inf=new Infr(game, playSound);
-					inf.init(65, 358);
+					inf.init(980,550);
 					informers.push(inf);
 					
 					var inf=new Infr(game, playSound);
-					inf.init(65, 590);
+					inf.init(980, 295);
 					informers.push(inf);					
 					
 					var inf=new Infr(game, playSound);
-					inf.init(965, 361);
+					inf.init(980, 430);
 					informers.push(inf);					
-					
-					var inf=new Infr(game, playSound);
-					inf.init(960, 588);
-					informers.push(inf);
-					
-					var inf=new Infr(game, playSound);
-					inf.init(586, 725);
-					informers.push(inf);						
+										
 					
 					scrScrn = new ScoreScreen(game, resetMinigame);
 					scrScrn.init();
 					
 					preStartPage=new PreStartPage(game, startClick);
-					preStartPage.init('File the correct shape in the correct hole');						
-					
+					preStartPage.init('Shoot the shape as soon as it starts falling');
 					
 					Init();
 					
@@ -287,198 +265,153 @@
 					this.game.time.advancedTiming = true;
 				}
 
+				function onFallShapeTimer() 
+				{
+					
+					var s = 0;
+					for (var i = 0; i < 6; i++) {
+						if (plannedFalls[i]) {
+							s++;
+						}
+					}
+					
+					if (s < 6) {
+						var r = Math.floor(Math.random() * 6);
+						while (plannedFalls[r]) {
+							r++;
+							r %= 6;
+						}
+						
+						plannedFalls[r] = true;
+						var fs = balls[r];
+						fs.fallOrder();
+						fs.speedCoef = (s+1)*0.15;
+					}
+					
+					switch (s) {
+						case 0:
+						case 1: {
+							fallShapeTimerDelay = 3000;
+						}
+						case 2:
+						case 3: {
+							fallShapeTimerDelay = 3000;
+						}
+						
+						case 4:
+						case 5: {
+							fallShapeTimerDelay = 2000;
+						}
+					}
+					if (s < 5) {
+						fallShapeTimer.stop();
+						fallShapeTimer.add(fallShapeTimerDelay, onFallShapeTimer);
+						fallShapeTimer.start();
+					}
+				}
+				
+				function onTimeStarted() {
+					fallShapeTimer.stop();
+					fallShapeTimer.add(fallShapeTimerDelay, onFallShapeTimer);
+					fallShapeTimer.start();
+				}
+				
+				function onFrame() 
+				{
+					var len = balls.length;
+					for (var i=0; i<len; i++) {
+						balls[i].step(0.15);
+					}
+					
+					crossHair.x = game.input.activePointer.x;
+					crossHair.y = game.input.activePointer.y;
+				
+					
+				}
+				
+				function onCircleMouseDown(item, pointer) 
+				{
+					
+						var fs = item.owner
+						if (fs.moveMode == 2) {
+							fs.showCorrect();
+							playSound('SND_SUCCESS',3);
+						//	playSound('SND_SHOT_SNIPER',1);
+							playSound('SND_POP',3);
+							var ft = fs.getFallTime();
+							if (ft < 1.4) {
+								var scr = 35;
+							}
+							else {
+								var scr = 35 * 1.4 / ft;
+							}
+							
+							
+							
+							setScore(0, scr, true);
+							numHits++;
+							setScore(1,numHits);
+							if (numHits + numMiss == 6) {
+								endGame();
+							}
+						}
+						else {
+							fs.showWrong();
+							playSound('SND_ERROR',3);
+							plannedFalls[fs.arId] = true;
+							receivedReplies[fs.arId] = true;
+							numMiss++;
+							setScore(2,numMiss);
+							
+							if (numHits + numMiss == 6) {
+								endGame();
+							}
+						}
+					
+				}
+				
+				function onBallFailed() 
+				{
+					numMiss++;
+					setScore(2,numMiss);
+					playSound('SND_ERROR',3);
+					if (numHits + numMiss == 6) {
+						endGame();
+					}
+				}
+				
+		
 				
 				
 				function Init() {
 					informers[0].reset(1,1,'reaction',false,200, 130);	
 					
-					informers[1].reset(7,1,'precision',false,200, 100);					
+					informers[1].reset(7,1,'hits',true,6, 100);					
+					informers[2].reset(5,1,'misses',true,6, 100);					
 					
-					informers[2].reset(5,1,'round',true,10, 100);					
-					informers[3].reset(5,1,'errors',false,3, 100);						
-					informers[4].reset(7,1,'time',false,10000, 100);
-					informers[4].isTime = true;
 					
 					playSound('SND_LVL_START1');
 					
 					preStartPage.show();
 					
-					shownShapes = 0;
-					errors = 0;
-					phaseId = 1;
-					
-					shp.visible = false;
-					shp.x = 500;
-					shp.y = 375;
-					
-					isDragging = false;
-					isCountingTime = false;		
-				}
-				
-				
-				function onAlphaTweenComplete() 
-				{
-					if (phaseId == 2) {
-						if (shownShapes < 10) {
-							showShape();
-						}
-						else {
-							endGame();
-							isCountingTime = false;
-						}
+									
+					for (var i = 0; i < 6; i++) {
+						balls[i].reset(i);
+						plannedFalls[i] = false;
+						receivedReplies[i] = false;
 					}
-				}				
-			
-				function onTimeStarted() {
-					showShape();
-					isCountingTime = true;
+					numHits = 0;
+					numMiss = 0;
+				//	addChild(crossHair);
+					
+					fallShapeTimerDelay = 4000;
+					fallShapeTimer.stop();
 				}
 				
-				function showShape() 
-				{
-					shp.x = 500;
-					shp.y = 375;
-					
-					var sid = Math.floor(5 * Math.random());
-					var cid = Math.floor(7 * Math.random());
-					
-					
-					
-					shp.frame = cid*5+sid;
-					shp.shapeId = sid;
-
-
-					
-					shp.rotation = 0;
-					shp.alpha = 0;
-					
-				//	shp.alphaShow();	
-					if (shp.alphaTwn){shp.alphaTwn.stop()}
-					shp.alphaTwn = game.add.tween(shp);
-					shp.alphaTwn.to({alpha:1}, 250);
-					shp.alphaTwn.onComplete.add(onAlphaTweenComplete, this)
-					shp.alphaTwn.start();
-					
-				
-					shp.visible = true;
-					
-					shownShapes++;
-					setScore(2,shownShapes);
-					phaseId = 1;
-					tm0 = Date.now();
-					playSound('SND_QUESTION',3);
-				}
-				
-				function onMouseMove() 
-				{
-					if (isDragging) {
-						shp.x = game.input.activePointer.x - deltaCoords.x;
-						shp.y = game.input.activePointer.y - deltaCoords.y;
-					}
-				}
-				
-				function onMouseDown(itm, pointer) 
-				{
-					if (phaseId == 1) {
-						isDragging = true;
-						deltaCoords.x = game.input.activePointer.x - shp.x;
-						deltaCoords.y = game.input.activePointer.y - shp.y;
-					}
-				}
-				
-				
-				function onFrame() 
-				{
-					if (isCountingTime) {
-						var tmPassed = Date.now() - tm0;
-						setScore(4,tmPassed);
-					}	
-					
-					onMouseMove();
-				}		
-				
-				function onMouseUp() 
-				{
-					if (isDragging) {
-						var hl = findClosestHole();
-						
-					
-						if (hl.shapeId == shp.shapeId) {
-							var d = Routines.prototype.GetDistanceBetween(shp.x, shp.y, hl.x, hl.y);
-							
-							console.log('distance '+d);
-							
-							var dt = Date.now() - tm0;
-							
-						//	shp.alphaHide();
-							if (shp.alphaTwn){shp.alphaTwn.stop()}
-							shp.alphaTwn = game.add.tween(shp);
-							shp.alphaTwn.to({alpha:0}, 250);
-							shp.alphaTwn.onComplete.add(onAlphaTweenComplete, this)
-							shp.alphaTwn.start();
-							
-							hl.animations.stop();
-							hl.animations.play('correct',5);
-							
-							var dScr = Routines.prototype.calcAccDragScore(d);
-							var tScr = Routines.prototype.calcPrecDragScore(dt);
-						
-							setScore(1, dScr, true);
-							setScore(0, tScr, true);
-							playSound('SND_SUCCESS',3);
-							
-							phaseId = 2;							
-						}
-						else {
-						//	shp.showWrong();
-						//	errSmb.alpha = 1;
-						//	errSmb.visible = true;	
-						//	errSmb.x = shp.x;
-						//	errSmb.y = shp.y;
-						//
-						//	if (errTwn){errTwn.stop()}
-						//	errTwn = game.add.tween(errSmb);
-                        //
-						//	errTwn.to({alpha:0},300,Phaser.Easing.Linear.NONE, true,0,2);
-						//	errTwn.start();
-						//
-							hl.animations.stop();
-							hl.animations.play('wrong',5);
-						
-							errors++;
-							playSound('SND_ERROR',3);
-							setScore(3, errors);
-						}
-						isDragging = false;
-
-					}
-				}
-				
-				function findClosestHole() 
-				{
-					var res = null;
-					var d;
-					var len = holes.length;
-					
-					for (var i=0; i<len; i++) {
-						hl = holes[i];
-						if (!res) {
-							res = hl;
-							d = Routines.prototype.GetDistanceBetween(shp.x, shp.y, hl.x, hl.y);
-						}
-						else {
-							var d1 = Routines.prototype.GetDistanceBetween(shp.x, shp.y, hl.x, hl.y);
-							if (d1 < d) {
-								d = d1;
-								res = hl;
-							}
-						}
-					}
-					return res;
-				}				
 				
 				function endGame() {
 					totScr = informers[0].score;
+					
 					scrScrn.show(totScr);
 					playSound('SND_LEVEL_FINISHED1');				
 				}
@@ -558,7 +491,7 @@
 						informers[infId].showScore(scr);
 					}
 				}
-
+				
                     return {
                         create: create,
                         update: update,

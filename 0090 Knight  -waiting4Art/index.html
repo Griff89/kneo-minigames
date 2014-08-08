@@ -1,17 +1,17 @@
 <!doctype html>
 <html>
 	<head>
-    		<script src="js/phaser.min.js"></script>
-            <script src="jquery.min.js"></script>
+		    <script src="js/phaser.min.js"></script>
+			<script src="jquery.min.js"></script>
             <script>
-                window.GAME_ID = 87;
+                window.GAME_ID = 90;
             </script>
-            <script src="../kneoscript.js"></script>
+			<script src="../kneoscript.js"></script>
+    		<script src="js/phaser.min.js"></script>
 			<script src="js/Routines.js"></script>
     		<script src="js/Infr.js"></script>
 			<script src="js/ScoreScreen.js"></script>
 			<script src="js/PreStartPage.js"></script>
-
 
     		<style>
     			body{margin:0}
@@ -22,8 +22,8 @@
 				// onPreload to be executed when the game preloads
 				// onCreate to be executed once the game is firstly created
 				// onUpdate to be called every time the game us updated
-                var game = new Phaser.Game(1000, 750, Phaser.AUTO, '');
-                this.bootScreen = function() {
+				var game = new Phaser.Game(1000, 750, Phaser.AUTO, '');
+				this.bootScreen = function() {
                     function preload() {
                         game.load.image('LOADER_BG', 'assets/kneo_assets/loaderBg.png');
                         game.load.image('LOADER_BAR', 'assets/kneo_assets/loader.png');
@@ -38,30 +38,29 @@
                     }
                 };
 
-
-                this.loadScreen = function() {
+				this.loadScreen = function() {
                     function preload() {
-                        game.load.image('PIC_BGD', 'assets/kneo_assets/Sorter-background.png');
-                        game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png');
-                        game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
-
-                        game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
-                        game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');
-
-                        game.load.bitmapFont('PIC_FONT', 'assets/fonts/sorter_font.png', 'assets/fonts/sorter_font.fnt');
-
-                        game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);
-
-                        game.load.spritesheet('PIC_SHAPES', 'assets/kneo_assets/Sorter-shapes.png', 148, 148);
-                        game.load.spritesheet('PIC_HOLES', 'assets/kneo_assets/Sorter-holes.png', 162, 162);
-                        game.load.spritesheet('PIC_YESNO', 'assets/kneo_assets/guess_results.png', 77, 78);
-
-
-                        game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
-                        game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');
-
-                        game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');
-
+				
+					game.load.image('PIC_BGD', 'assets/BackGround.png');
+					game.load.image('PIC_GAME_DESIGNER', 'assets/kneo_assets/kid.png'); 
+					game.load.image('PIC_PRESTART_PANEL', 'assets/kneo_assets/popup_full_1.png');
+					
+					game.load.spritesheet('PIC_BIG_BTN_BASE', 'assets/kneo_assets/login_button.png', 336, 73);
+					game.load.image('PIC_BTN_CAPTION', 'assets/kneo_assets/start.png');					
+					
+					game.load.bitmapFont('PIC_FONT', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
+					
+					game.load.spritesheet('PIC_CLOSE_BTN', 'assets/kneo_assets/button_x.png', 80, 80);								
+					
+					game.load.atlasJSONArray('PIC_ALL_ART', 'assets/UW.png', 'assets/UW.json');
+					game.load.image('PIC_CHESSBOARD', 'assets/HTML5ChessBoard.png');
+					
+			
+				
+					game.load.spritesheet('PIC_RESTART_BTN', 'assets/RestartButton.png', 224,189);
+					game.load.image('PIC_LVL_END', 'assets/LevelComplStatic.png');					
+					
+					game.load.audio('sfx', 'assets/audio/ALL_SND.mp3');	
                         // LOADER
                         game.add.sprite(0, 0, 'LOADER_BG');
                         game.load.setPreloadSprite(game.add.sprite(331, 380, 'LOADER_BAR'));
@@ -77,23 +76,14 @@
                     }
                 };
 
-                this.gameScreen = function() {
-
-				var holes = [];
-				var shp = null;
+				this.gameScreen = function() {
 				
-				var tm0 = 0;
-				var errors = 0;
-				var shownShapes = 0;
-				
-				var phaseId = 0;
-				
-				var isDragging = false;
-				var deltaCoords = null;//:Point;
-				var isCountingTime = false;
-				var hasMovedThisFrame = false;			
-				var errSmb = null;
-				var errTwn = null;
+				var board = null;
+				var coins = [];
+				var knight = null;
+				var track = null;
+				var fadingKnight = null;
+				var moveMarkers = [];
 				
 				var totScr=0;
 				
@@ -101,6 +91,10 @@
 				var preStartPage = null;
 				
 				var scrScrn = null;
+				
+				var nonCoinsMoves = 0;
+				var coinsCollected = 0;
+				var movesMade = 0;
 				
 				
 				//var fpsInformer;
@@ -212,74 +206,79 @@
 					
 					fx.addMarker('SND_CLICK1', 48.038, 0.005);
 					fx.addMarker('SND_CLICK2', 48.088, 0.006);
-					fx.addMarker('SND_CLICK3', 48.144, 0.005);
+					fx.addMarker('SND_CLICK3', 48.144, 0.005);	
+					
+					//shoot here between
+					
+					
+					fx.addMarker('SND_GAME_MOVE_KNIGHT1', 49.093, 0.219);
+					fx.addMarker('SND_GAME_MOVE_KNIGHT2', 49.312, 0.272);
+					fx.addMarker('SND_GAME_MOVE_KNIGHT3', 49.583, 0.241);	
+					
+					fx.addMarker('SND_GAME_COIN1', 49.825, 0.648);
+					fx.addMarker('SND_GAME_COIN2', 50.472, 0.686);
+					fx.addMarker('SND_GAME_COIN3', 51.158, 0.727);
 
 					}
 					game.add.sprite(0, 0, 'PIC_BGD');
-					
 					//console.log('create');
 					//lvlCap = game.add.text(320, 40, 'Chessfield',{fill:"#482f11", font:"36px Arial", align: "center"});
 					
-
-				//	holes = new Array();
-					for (var i = 0; i < 5; i++) {
-						var hl = game.add.sprite(
-										500 + 225 * Math.sin(i * 2 * Math.PI / 5),
-										375 + 225 * Math.cos(i * 2 * Math.PI / 5),
-										'PIC_HOLES', i+10);
-						holes.push(hl);
-						hl.shapeId = i;
-					
-						hl.anchor.setTo(0.5,0.5);
-						hl.animations.add('wrong',[i,i+10,i,i+10,i,i+10]);
-						hl.animations.add('correct',[i+5,i+10]);
-					}					
-					
-					shp = game.add.sprite(500, 375, 'PIC_SHAPES');
-					shp.anchor.setTo(0.5,0.5);
-				
-					shp.x = 500;
-					shp.y = 375;
-					shp.inputEnabled = true;
-					shp.input.useHandCursor = true;
-					shp.events.onInputDown.add(onMouseDown, this);
-					
-					errSmb = game.add.sprite(0,0,'PIC_YESNO',1);
-					errSmb.visible = false;
-					errSmb.anchor.setTo(0.5,0.5);
-					
-					game.input.onUp.add(onMouseUp, this);
-					
-				//	shp.addEventListener("twnComplete", onAlphaTweenComplete);
-					
-					deltaCoords = new Phaser.Point();
-					
+					//reaction
 					var inf=new Infr(game, playSound);
-					inf.init(65, 358);
+					inf.init(50, 200);
 					informers.push(inf);
 					
+					//coins
 					var inf=new Infr(game, playSound);
-					inf.init(65, 590);
+					inf.init(610, 100);
 					informers.push(inf);					
 					
+					//moves
 					var inf=new Infr(game, playSound);
-					inf.init(965, 361);
-					informers.push(inf);					
-					
-					var inf=new Infr(game, playSound);
-					inf.init(960, 588);
-					informers.push(inf);
-					
-					var inf=new Infr(game, playSound);
-					inf.init(586, 725);
+					inf.init(610, 300);
 					informers.push(inf);						
+					
+
+					
+					board = game.add.sprite(120,20,'PIC_CHESSBOARD');
+					
+					
+					for (var i = 0; i < 8; i++ ) {
+						var mrk = game.add.sprite(0,0,'PIC_ALL_ART','KinghtMarkerBase0000');
+						moveMarkers.push(mrk);
+						mrk.anchor.setTo(0.5, 0.5);
+						mrk.inputEnabled = true;
+						mrk.input.useHandCursor = true;
+						mrk.events.onInputDown.add(onBoardDown,this);
+					}
+					
+				//	fadingKnight = game.add.sprite(0,0,'PIC_ALL_ART','KnightFigure0000');
+					
+					track = game.add.sprite(0,0,'PIC_ALL_ART','KnightTrackInner0000');
+					track.animations.add('show',[22,23,24,25,26,27,28]);
+					track.events.onAnimationComplete.add(onTrackAnimComplete, this);
+					
+					knight = game.add.sprite(0,0,'PIC_ALL_ART','KnightFigure0000');
+					
+					
+					knight.anchor.setTo(0.5, 0.5);
+					track.anchor.setTo(0.25, 0.66);
+					
+					for (var i = 0; i < 8; i++ ) {
+						for (var j = 0; j < 8; j++ ) {
+							var cn = game.add.sprite(150 + 50 * i, 40 + 50 * j, 'PIC_ALL_ART','Coin0000');
+							cn.anchor.setTo(0.5, 0.5);
+							coins.push(cn);
+							cn.animations.add('get',[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]);
+						}
+					}					
 					
 					scrScrn = new ScoreScreen(game, resetMinigame);
 					scrScrn.init();
 					
 					preStartPage=new PreStartPage(game, startClick);
-					preStartPage.init('File the correct shape in the correct hole');						
-					
+					preStartPage.init('Collect all the coins!');
 					
 					Init();
 					
@@ -290,195 +289,133 @@
 				
 				
 				function Init() {
-					informers[0].reset(1,1,'reaction',false,200, 130);	
+					informers[0].reset(1,1,'attention',false,200, 130);	
 					
-					informers[1].reset(7,1,'precision',false,200, 100);					
+					informers[1].reset(7,1,'coins',true,32, 100);					
+					informers[2].reset(5,1,'moves',false,3, 100);					
 					
-					informers[2].reset(5,1,'round',true,10, 100);					
-					informers[3].reset(5,1,'errors',false,3, 100);						
-					informers[4].reset(7,1,'time',false,10000, 100);
-					informers[4].isTime = true;
 					
 					playSound('SND_LVL_START1');
 					
 					preStartPage.show();
 					
-					shownShapes = 0;
-					errors = 0;
-					phaseId = 1;
-					
-					shp.visible = false;
-					shp.x = 500;
-					shp.y = 375;
-					
-					isDragging = false;
-					isCountingTime = false;		
-				}
-				
-				
-				function onAlphaTweenComplete() 
-				{
-					if (phaseId == 2) {
-						if (shownShapes < 10) {
-							showShape();
-						}
-						else {
-							endGame();
-							isCountingTime = false;
-						}
-					}
-				}				
-			
-				function onTimeStarted() {
-					showShape();
-					isCountingTime = true;
-				}
-				
-				function showShape() 
-				{
-					shp.x = 500;
-					shp.y = 375;
-					
-					var sid = Math.floor(5 * Math.random());
-					var cid = Math.floor(7 * Math.random());
-					
-					
-					
-					shp.frame = cid*5+sid;
-					shp.shapeId = sid;
-
-
-					
-					shp.rotation = 0;
-					shp.alpha = 0;
-					
-				//	shp.alphaShow();	
-					if (shp.alphaTwn){shp.alphaTwn.stop()}
-					shp.alphaTwn = game.add.tween(shp);
-					shp.alphaTwn.to({alpha:1}, 250);
-					shp.alphaTwn.onComplete.add(onAlphaTweenComplete, this)
-					shp.alphaTwn.start();
-					
-				
-					shp.visible = true;
-					
-					shownShapes++;
-					setScore(2,shownShapes);
-					phaseId = 1;
-					tm0 = Date.now();
-					playSound('SND_QUESTION',3);
-				}
-				
-				function onMouseMove() 
-				{
-					if (isDragging) {
-						shp.x = game.input.activePointer.x - deltaCoords.x;
-						shp.y = game.input.activePointer.y - deltaCoords.y;
-					}
-				}
-				
-				function onMouseDown(itm, pointer) 
-				{
-					if (phaseId == 1) {
-						isDragging = true;
-						deltaCoords.x = game.input.activePointer.x - shp.x;
-						deltaCoords.y = game.input.activePointer.y - shp.y;
-					}
-				}
-				
-				
-				function onFrame() 
-				{
-					if (isCountingTime) {
-						var tmPassed = Date.now() - tm0;
-						setScore(4,tmPassed);
-					}	
-					
-					onMouseMove();
-				}		
-				
-				function onMouseUp() 
-				{
-					if (isDragging) {
-						var hl = findClosestHole();
-						
-					
-						if (hl.shapeId == shp.shapeId) {
-							var d = Routines.prototype.GetDistanceBetween(shp.x, shp.y, hl.x, hl.y);
+					for (var i = 0; i < 8; i++ ) {
+						for (var j = 0; j < 8; j++ ) {
+							var cn = coins[8 * i + j];
+							cn.animations.stop();
+							cn.frame = 0;
 							
-							console.log('distance '+d);
 							
-							var dt = Date.now() - tm0;
-							
-						//	shp.alphaHide();
-							if (shp.alphaTwn){shp.alphaTwn.stop()}
-							shp.alphaTwn = game.add.tween(shp);
-							shp.alphaTwn.to({alpha:0}, 250);
-							shp.alphaTwn.onComplete.add(onAlphaTweenComplete, this)
-							shp.alphaTwn.start();
-							
-							hl.animations.stop();
-							hl.animations.play('correct',5);
-							
-							var dScr = Routines.prototype.calcAccDragScore(d);
-							var tScr = Routines.prototype.calcPrecDragScore(dt);
-						
-							setScore(1, dScr, true);
-							setScore(0, tScr, true);
-							playSound('SND_SUCCESS',3);
-							
-							phaseId = 2;							
-						}
-						else {
-						//	shp.showWrong();
-						//	errSmb.alpha = 1;
-						//	errSmb.visible = true;	
-						//	errSmb.x = shp.x;
-						//	errSmb.y = shp.y;
-						//
-						//	if (errTwn){errTwn.stop()}
-						//	errTwn = game.add.tween(errSmb);
-                        //
-						//	errTwn.to({alpha:0},300,Phaser.Easing.Linear.NONE, true,0,2);
-						//	errTwn.start();
-						//
-							hl.animations.stop();
-							hl.animations.play('wrong',5);
-						
-							errors++;
-							playSound('SND_ERROR',3);
-							setScore(3, errors);
-						}
-						isDragging = false;
-
-					}
-				}
-				
-				function findClosestHole() 
-				{
-					var res = null;
-					var d;
-					var len = holes.length;
-					
-					for (var i=0; i<len; i++) {
-						hl = holes[i];
-						if (!res) {
-							res = hl;
-							d = Routines.prototype.GetDistanceBetween(shp.x, shp.y, hl.x, hl.y);
-						}
-						else {
-							var d1 = Routines.prototype.GetDistanceBetween(shp.x, shp.y, hl.x, hl.y);
-							if (d1 < d) {
-								d = d1;
-								res = hl;
+							if (((i+j)%2)==0){
+								cn.visible = true;
+								cn.isOnBoard = true;
+							}
+							else{
+								cn.visible = false;
+								cn.isOnBoard = false;
 							}
 						}
 					}
-					return res;
+					placeKnightAtCell(0,7);
+					coins[8 * 0 + 7].visible = false;
+					coins[8 * 0 + 7].isOnBoard = false;
+					
+					showKnigtsAllowedMoves(knight.cell_x, knight.cell_y);
+					nonCoinsMoves = 0;
+					coinsCollected = 0;
+					movesMade = 0;
+				}
+				
+				
+				function showKnigtsAllowedMoves(kx,ky) {
+					var mid = 0;
+					for (var cx = 0; cx < 8; cx++ ) {
+						for (var cy = 0; cy < 8; cy++ ) {
+							var adx = Math.abs(cx - kx);
+							var ady = Math.abs(cy - ky);
+							if (((adx == 1) && (ady == 2)) || ((adx == 2) && (ady == 1))) {
+								var mrk = moveMarkers[mid];
+								mrk.x = 25 + 50 * cx+126;
+								mrk.y = 25 + 50 * cy+27;
+								mrk.cell_x = cx;
+								mrk.cell_y = cy;
+								mrk.visible = true;
+								mid++;
+							}
+						}
+					}
+					for (var i = mid; i < 8; i++ ) {
+						mrk = moveMarkers[i];
+						mrk.visible = false;
+					}				
+				}
+				
+				function placeKnightAtCell(cx,cy) {
+					knight.cell_x = cx;
+					knight.cell_y = cy;
+					knight.x = 150 + 50 * knight.cell_x;
+					knight.y = 40 + 50 * knight.cell_y;				
+				
+				}
+				
+				function onBoardDown(itm, ptr) 
+				{
+					
+					var km = itm;
+					track.x = knight.x;
+					track.y = knight.y;
+					track.visible = true;
+					track.animations.stop();
+					track.animations.play('show');
+					
+					var ang = Routines.prototype.FindDirectionInDegrees(knight.cell_x, knight.cell_y, km.cell_x, km.cell_y);
+					ang -= 63;
+
+					track.angle = ang;
+					
+					//var tr:KinghtTrack = new KinghtTrack();
+					//tr.showMovement(knight.cell_x, knight.cell_y, km.cell_x, km.cell_y);
+					//addChild(tr);
+					placeKnightAtCell(km.cell_x, km.cell_y);
+					//addChild(knight);
+					
+					playSound('SND_GAME_MOVE_KNIGHT',3);
+					
+					var cn = coins[8 * km.cell_x + km.cell_y];
+					movesMade++;
+					setScore(2, movesMade);
+					if (cn.isOnBoard) {
+						cn.visible = false;
+						cn.isOnBoard = false;
+					//	dispatchEvent(new Event('correctAction'));
+					//	SoundPlayer.PlayASoundID(SoundPlayer.SND_GAME_COIN);
+						playSound('SND_GAME_COIN',3);
+						coinsCollected++;
+						setScore(1, coinsCollected);
+						var scr = Math.floor(12/(nonCoinsMoves+1));
+						setScore(0, scr, true);
+						nonCoinsMoves = 0;
+						
+						if (coinsCollected==32){
+							endGame();
+						}
+					}
+					else{
+						playSound('SND_GAME_MOVE_KNIGHT',3);
+						nonCoinsMoves++;
+					}
+					showKnigtsAllowedMoves(knight.cell_x,knight.cell_y);
+				
+
 				}				
+				function onTrackAnimComplete() {
+					track.visible = false;
+				}
+				
 				
 				function endGame() {
 					totScr = informers[0].score;
+					
 					scrScrn.show(totScr);
 					playSound('SND_LEVEL_FINISHED1');				
 				}
@@ -500,7 +437,7 @@
 				// THE GAME IS GOING TO BE UPDATED
 				function update() {
 				//	console.log(getTimer());
-					onFrame();
+				//	onFrame();
 	    		}
 				
 				function getDistanceBetween(x1,y1,x2,y2){
@@ -532,7 +469,7 @@
 					playSound('SND_BTN_DOWN',3);
 
 				
-					onTimeStarted();
+				//	onTimeStarted();
 				}
 				
 				function playSound(pref,vars) {
@@ -558,7 +495,7 @@
 						informers[infId].showScore(scr);
 					}
 				}
-
+				
                     return {
                         create: create,
                         update: update,
