@@ -1,0 +1,98 @@
+{"frames": [
+{
+	"filename": "FaceEyes0000",
+	"frame": {"x":1,"y":1,"w":57,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":25},
+	"sourceSize": {"w":57,"h":25}
+}
+,{
+	"filename": "FaceEyes0001",
+	"frame": {"x":60,"y":1,"w":57,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":25},
+	"sourceSize": {"w":57,"h":25}
+}
+,{
+	"filename": "FaceEyes0002",
+	"frame": {"x":119,"y":1,"w":57,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":25},
+	"sourceSize": {"w":57,"h":25}
+}
+,{
+	"filename": "FaceEyes0003",
+	"frame": {"x":178,"y":1,"w":57,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":25},
+	"sourceSize": {"w":57,"h":25}
+}
+,{
+	"filename": "FaceEyes0004",
+	"frame": {"x":1,"y":28,"w":57,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":57,"h":25},
+	"sourceSize": {"w":57,"h":25}
+}
+,{
+	"filename": "FaceMouth0000",
+	"frame": {"x":60,"y":28,"w":52,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":19},
+	"sourceSize": {"w":52,"h":19}
+}
+,{
+	"filename": "FaceMouth0001",
+	"frame": {"x":114,"y":28,"w":52,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":19},
+	"sourceSize": {"w":52,"h":19}
+}
+,{
+	"filename": "FaceMouth0002",
+	"frame": {"x":168,"y":28,"w":52,"h":19},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":19},
+	"sourceSize": {"w":52,"h":19}
+}
+,{
+	"filename": "FaceShape0000",
+	"frame": {"x":1,"y":55,"w":84,"h":82},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":82},
+	"sourceSize": {"w":84,"h":82}
+}
+,{
+	"filename": "FaceShape0001",
+	"frame": {"x":87,"y":55,"w":84,"h":82},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":82},
+	"sourceSize": {"w":84,"h":82}
+}
+,{
+	"filename": "FaceShape0002",
+	"frame": {"x":1,"y":139,"w":84,"h":82},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":82},
+	"sourceSize": {"w":84,"h":82}
+}],
+"meta": {
+	"app": "Adobe Flash CS6",
+	"version": "12.0.0.481",
+	"image": "face_elems.png",
+	"format": "RGBA8888",
+	"size": {"w":256,"h":256},
+	"scale": "1"
+}
+}
